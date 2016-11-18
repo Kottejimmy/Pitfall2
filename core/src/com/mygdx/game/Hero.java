@@ -5,6 +5,14 @@ package com.mygdx.game;
  */
 public class Hero extends Figure{
 
-    public Hero (String textureFilePath, float x, float y, )
+    public Hero (String textureFilePath, float x, float y, int size){
+        super(textureFilePath,x,y,size);
+    }
 
+    public void goRight(){
+        setSpeedX(3);
+    }
+    public void goLeft(){
+        setSpeedX(-3);
+    }
 }
