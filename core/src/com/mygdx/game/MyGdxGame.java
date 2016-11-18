@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import javafx.collections.ObservableArray;
 
 import java.util.ArrayList;
 
@@ -17,10 +18,19 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		obstacles = new ArrayList<Obstacle>();
 		batch = new SpriteBatch();
-		backGroundImg = new Texture("Backgrounds/alienparkfloor.jpg");
-		Obstacle brickplattform = new Obstacle("Plattform/brickPlattform.png",100,450,100,100);
-		obstacles.add(brickplattform);
+		backGroundImg = new Texture("Backgrounds/castle.jpg");
+		Obstacle sandfloor = new Obstacle("Plattform/sand.jpg",0,0,1366,20);
+		Obstacle brickwalllong = new Obstacle("Plattform/brickwall.png",0,0,20,768);
+		Obstacle brickwallshort = new Obstacle("Plattform/brickwall.png",Gdx.graphics.getWidth()-20,0,20,650);
+		Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png",20,150,321,34);
+		Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png",Gdx.graphics.getWidth()-421,150,321,34);
+		obstacles.add(brickwallshort);
+		obstacles.add(brickwalllong);
+		obstacles.add(brickplattform1);
+		obstacles.add(sandfloor);
+		obstacles.add(brickplattform2);
 
 	}
 

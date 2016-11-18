@@ -15,7 +15,7 @@ public class Obstacle {
 
         sprite = new Sprite(new Texture(textureFilepath));
         sprite.setX(x_position);
-        sprite.setX(y_position);
+        sprite.setY(y_position);
         sprite.setSize(width,height);
 
     }
