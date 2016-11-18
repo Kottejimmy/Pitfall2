@@ -26,10 +26,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		Obstacle brickwallshort = new Obstacle("Plattform/brickwall.png",Gdx.graphics.getWidth()-20,0,20,650);
 		Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png",20,150,321,34);
 		Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png",Gdx.graphics.getWidth()-421,150,321,34);
+		Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png",Gdx.graphics.getWidth()/2,350,321,34);
 		obstacles.add(brickwallshort);
 		obstacles.add(brickwalllong);
 		obstacles.add(brickplattform1);
 		obstacles.add(sandfloor);
+		obstacles.add(brickplattform3);
 		obstacles.add(brickplattform2);
 
 	}
