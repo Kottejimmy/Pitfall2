@@ -6,14 +6,22 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
+
 public class MyGdxGame extends ApplicationAdapter {
+
+
 	SpriteBatch batch;
-	Texture img;
+	Texture backGroundImg;
+	ArrayList<Obstacle> obstacles;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("Backgrounds/alienparkfloor.jpg");
+		backGroundImg = new Texture("Backgrounds/alienparkfloor.jpg");
+		Obstacle brickplattform = new Obstacle("Plattform/brickPlattform.png",100,450,100,100);
+		obstacles.add(brickplattform);
+
 	}
 
 	@Override
@@ -21,13 +29,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, 0, 0);
+		batch.draw(backGroundImg, 0, 0);
+		for (Obstacle obstacle: obstacles){
+			obstacle.draw(batch);
+		}
 		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		backGroundImg.dispose();
 	}
 }
