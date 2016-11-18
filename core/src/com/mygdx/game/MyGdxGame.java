@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,9 +16,46 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture backGroundImg;
 	ArrayList<Obstacle> obstacles;
+	ArrayList<Figure> figures;
+	Hero hero;
+
 	
 	@Override
 	public void create () {
+		createObstacles();
+		createfigures();
+
+	}
+
+	@Override
+	public void render () {
+		checkInput();
+
+
+		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		for (Figure figure: figures){
+			figure.updatePosition();
+		}
+
+		batch.begin();
+		batch.draw(backGroundImg, 0, 0);
+		for (Figure figure: figures){
+			figure.draw(batch);
+		}
+		for (Obstacle obstacle: obstacles){
+			obstacle.draw(batch);
+		}
+		batch.end();
+	}
+	
+	@Override
+	public void dispose () {
+		batch.dispose();
+		backGroundImg.dispose();
+	}
+	public void createObstacles(){
 		obstacles = new ArrayList<Obstacle>();
 		batch = new SpriteBatch();
 		backGroundImg = new Texture("Backgrounds/castle.jpg");
@@ -33,24 +71,20 @@ public class MyGdxGame extends ApplicationAdapter {
 		obstacles.add(sandfloor);
 		obstacles.add(brickplattform3);
 		obstacles.add(brickplattform2);
+	}
+	public void createfigures(){
+		figures = new ArrayList<Figure>();
+		hero = new Hero("Hero/Random-Red-Hero.png",200,500,100);
+		hero.setSpeedY(-3);
+		figures.add(hero);
 
 	}
-
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(backGroundImg, 0, 0);
-		for (Obstacle obstacle: obstacles){
-			obstacle.draw(batch);
+	public void checkInput(){
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+			hero.goRight();
 		}
-		batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		backGroundImg.dispose();
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+			hero.goLeft();
+		}
 	}
 }

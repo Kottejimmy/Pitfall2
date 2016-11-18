@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * Created by Kottejimmy on 2016-11-18.
@@ -28,7 +29,7 @@ public class Figure {
         return sprite.getY();
     }
     public void setY (float y){
-        sprite.setX(y);
+        sprite.setY(y);
     }
     public int getSpeedX() {
         return speedX;
@@ -45,4 +46,15 @@ public class Figure {
     public Sprite getSprite() {
         return sprite;
     }
+    public void draw(SpriteBatch batch){
+        sprite.draw(batch);
+    }
+    public void updatePosition(){
+
+
+        setX(getX()+getSpeedX());
+        setY(getY()+getSpeedY());
+
+    }
+
 }
