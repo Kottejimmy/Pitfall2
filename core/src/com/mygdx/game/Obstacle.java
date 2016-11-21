@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by kottejimmy on 11/18/2016.
@@ -24,4 +25,12 @@ public class Obstacle {
     public void draw(SpriteBatch batch){
         sprite.draw(batch);
     }
+    public Rectangle getCollisionRectangle(){
+        return new Rectangle(
+                sprite.getX(),
+                sprite.getY(),
+                sprite.getWidth(),
+                sprite.getHeight());
+    }
+
 }
