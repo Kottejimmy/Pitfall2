@@ -12,25 +12,25 @@ public class Obstacle {
 
     Sprite sprite;
 
-    public Obstacle (String textureFilepath, float x_position, float y_position, int width,int height){
+    public Obstacle(String textureFilepath, float x_position, float y_position, int width, int height) {
 
         sprite = new Sprite(new Texture(textureFilepath));
         sprite.setX(x_position);
         sprite.setY(y_position);
-        sprite.setSize(width,height);
+        sprite.setSize(width, height);
 
     }
 
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
-    public Rectangle getCollisionRectangle(){
+
+    public Rectangle getCollisionRectangle() {
         return new Rectangle(
                 sprite.getX(),
                 sprite.getY(),
                 sprite.getWidth(),
                 sprite.getHeight());
     }
-
 }
