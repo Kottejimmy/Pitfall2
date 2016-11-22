@@ -3,15 +3,17 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.ApplicationAdapter;
 
 
 import java.util.ArrayList;
 
-public class MyGdxGame extends ApplicationAdapter {
+public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
 	private static final int  FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
@@ -38,6 +40,29 @@ public class MyGdxGame extends ApplicationAdapter {
 	float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
 
 
+	private enum GameState {
+		START_SCREEN,
+		CONTROLS,
+		GAME_OVER,
+		LEVEL_ONE,
+		LEVEL_TWO,
+		LEVEL_THREE,
+		LEVEL_FOUR,
+		LEVEL_FIVE,
+		LEVEL_SIX,
+		LEVEL_SEVEN,
+		LEVEL_EIGHT,
+		LEVEL_NINE,
+		LEVEL_TEN;
+
+	}
+
+	Texture start;
+	Texture controls;
+	Texture gameover;
+	GameState state = GameState.START_SCREEN;
+
+
 
 	@Override
 	public void create () {
@@ -47,59 +72,45 @@ public class MyGdxGame extends ApplicationAdapter {
 		createfigures();
 		createEnemy();
 		createTreasure();
-
-
-
-
-
+		start = new Texture("gamescenarios/pitfall2_startscreen.png");
+		controls = new Texture("gamescenarios/pitfall2_controls.png");
+		gameover = new Texture("gamescenarios/Game_Over_Screen.png");
+		Gdx.input.setInputProcessor(this);
 
 
 	}
+
+
 	@Override
 			public void render () {
-				checkInput();
 
 
-				Gdx.gl.glClearColor(1, 0, 0, 1);
-				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
-				stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-				currentFrame = walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
-
-		checkObstacleCollision();
-		checkEnemyCollision();
-		updatePositions();
-
-
-
-		for (Figure figure : figures) {
-			figure.updatePosition();
-		}
-		spriteBatch.begin();
-
-
-
-		spriteBatch.draw(backGroundImg, 0, 20);
-		spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
-		spriteBatch.draw(currentFrame, 300, 120);
-		font.draw(spriteBatch,"Number of lives:", 20,700);
-
-
-
-
-		//Update all game figures' positions based on their speeds
-		for (Figure figure : figures) {
-			figure.draw(spriteBatch);
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+			System.exit(0);
 		}
 
 
-		for (Obstacle obstacle : obstacles) {
-					obstacle.draw(spriteBatch);
-				}
+		switch (state){
+			case START_SCREEN:
+				showStartScreen();
+				break;
+			case CONTROLS:
+				showControls();
+				break;
+			case LEVEL_ONE:
+				renderLevelOne();
+				break;
+			case GAME_OVER:
+				gameOver();
+				break;
+		}
 
 
-				spriteBatch.end();
-				figures.get(0).setSpeedX(0);
+
+
 	}
 
 	// free up resources when the game exits.
@@ -168,7 +179,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 
 		}
-	public void checkObstacleCollision() {
+		public void checkObstacleCollision() {
 
 
 		for (int i =0;i<figures.size(); i++ ) {
@@ -187,18 +198,20 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 	}
-	public void checkEnemyCollision() {
-		for(int i = 0; i < figures.size(); i++) {
-			if(figures.get(i) instanceof Bats) {
-			if(hero.collidesWith(figures.get(i).getCollisionRectangle())) {
-				System.out.println("You're dead.");
-				return;
-			}
+		public void checkEnemyCollision() {
+			for(int i = 0; i < figures.size(); i++) {
+				if(figures.get(i) instanceof Bats) {
+					if(hero.collidesWith(figures.get(i).getCollisionRectangle())) {
+						state = GameState.GAME_OVER;
+						createObstacles ();
+						createfigures();
+						createEnemy();
+					}
+				}
 			}
 		}
 
-	}
-	public void updatePositions (){
+		public void updatePositions (){
 		for (Figure figure: figures) {
 			figure.updatePosition();
 		}
@@ -217,5 +230,134 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 
 		}
+
+
+	public void showStartScreen(){
+		spriteBatch.begin();
+		spriteBatch.draw(start, 411, 144);
+		spriteBatch.end();
+
+		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)){
+			state  = GameState.LEVEL_ONE;
+		} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)){
+			state = GameState.CONTROLS;
+		} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)){
+			System.exit(0);
+		}  else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)){
+			state = GameState.GAME_OVER;
+		}
+	}
+
+	public void gameOver() {
+		spriteBatch.begin();
+		spriteBatch.draw(gameover, 480, 210);
+		spriteBatch.end();
+		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
+			state = GameState.START_SCREEN;
+		} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
+			System.exit(0);
+		}
+	}
+
+
+	public void showControls(){
+		spriteBatch.begin();
+		spriteBatch.draw(controls, 411, 144);
+		spriteBatch.end();
+		if (Gdx.input.isKeyPressed(Input.Keys.BACKSPACE)){
+			state = GameState.START_SCREEN;
+		}
+	}
+
+	public void renderLevelOne(){
+		checkInput();
+
+
+		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
+		stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+
+		currentFrame = walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
+
+		checkObstacleCollision();
+		checkEnemyCollision();
+		updatePositions();
+
+
+
+		for (Figure figure : figures) {
+			figure.updatePosition();
+		}
+		spriteBatch.begin();
+
+
+
+		spriteBatch.draw(backGroundImg, 0, 20);
+		spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
+		spriteBatch.draw(currentFrame, 300, 120);
+		font.draw(spriteBatch,"Number of lives:", 20,700);
+
+
+
+
+		//Update all game figures' positions based on their speeds
+		for (Figure figure : figures) {
+			figure.draw(spriteBatch);
+		}
+
+
+		for (Obstacle obstacle : obstacles) {
+			obstacle.draw(spriteBatch);
+		}
+
+
+		spriteBatch.end();
+		figures.get(0).setSpeedX(0);
+	}
+
+
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		if (keycode == Input.Keys.NUM_1 && state == GameState.GAME_OVER){
+				state = GameState.START_SCREEN;
+			}
+		return true;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
+	}
+
 }
 

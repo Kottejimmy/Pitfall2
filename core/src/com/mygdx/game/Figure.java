@@ -81,14 +81,10 @@ public class Figure {
                 getSprite().getX(),
                 getSprite().getY(),
                 getSprite().getWidth(),
-                1);
+                getSprite().getHeight());
     }
     public boolean collidesWith(Rectangle otherRect){
-        if (getCollisionRectangle().overlaps(otherRect)){
             return getCollisionRectangle().overlaps(otherRect);
-        }
-        else
-            return false;
     }
     //If we are at the screen egde...
     //...change speed to opposite direction ("bounce").
