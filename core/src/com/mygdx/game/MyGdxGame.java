@@ -19,9 +19,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	private static final int  FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
 	private static final int  FRAME_ROWS = 1;
 
-	BitmapFont font;
-
-
+	BitmapFont font;// this is used when we put text on the screen (lives and high score)
 
 	Texture backGroundImg;
 	ArrayList<Obstacle> obstacles;
@@ -34,7 +32,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	TextureRegion[]  walkFrames; //Declare walkFrames as an array of TextureRegion objects.
 	SpriteBatch  spriteBatch;    //he SpriteBatch is used to draw the texture onto the screen.
 	TextureRegion   currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
-
 
 
 	float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
@@ -62,8 +59,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	Texture gameover;
 	GameState state = GameState.START_SCREEN;
 
-
-
 	@Override
 	public void create () {
 		font = new BitmapFont();
@@ -75,6 +70,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		start = new Texture("gamescenarios/pitfall2_startscreen.png");
 		controls = new Texture("gamescenarios/pitfall2_controls.png");
 		gameover = new Texture("gamescenarios/Game_Over_Screen.png");
+		backGroundImg = new Texture("Backgrounds/castle.jpg");
 		Gdx.input.setInputProcessor(this);
 
 
@@ -87,6 +83,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+		currentFrame = walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
 
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
 			System.exit(0);
@@ -123,10 +121,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		public void createObstacles () {
 			obstacles = new ArrayList<Obstacle>();
 			spriteBatch = new SpriteBatch();
-			backGroundImg = new Texture("Backgrounds/castle.jpg");
+
+			Obstacle brickplattform5 = new Obstacle("Hero/ladder.png", 920, 160, 50, 280);
 			Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1366, 20);
 			Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 20, 350, 321, 34);
-			Obstacle brickplattform5 = new Obstacle("Hero/ladder.png", 920, 160, 50, 280);
 			Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 80, 400, 34);
 			Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 130, 321, 34);
 			Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 400, 400, 34);
@@ -271,27 +269,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	public void renderLevelOne(){
 		checkInput();
-
-
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
-		stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
-
-		currentFrame = walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
-
 		checkObstacleCollision();
 		checkEnemyCollision();
 		updatePositions();
-
-
 
 		for (Figure figure : figures) {
 			figure.updatePosition();
 		}
 		spriteBatch.begin();
-
-
-
 		spriteBatch.draw(backGroundImg, 0, 20);
 		spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
 		spriteBatch.draw(currentFrame, 300, 120);
