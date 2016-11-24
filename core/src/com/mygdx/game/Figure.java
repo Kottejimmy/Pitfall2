@@ -9,32 +9,41 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Figure {
 
+    //sets speed variable
     private int speedX = 0;
     private int speedY = 0;
+    //field for each sprite
     private Sprite sprite;
-
-
-
+    //constructor
 
     public Figure(String textureFilePath,float x, float y, int size){ // path to the file, positions, size
+        //sets image to sprite
         sprite = new Sprite(new Texture(textureFilePath));
+        //sets x and y coordinates
         sprite.setX(x);
         sprite.setY(y);
+        //sets size
         sprite.setSize(size,size);
-
-
-
-
     }
+    //when figures reaches screen edges it should stop
     public void stopAtEdge(){
-        if (getX()>Gdx.graphics.getWidth()-sprite.getWidth())
+        // if figure collides with screen edge (right side)
+        if (getX()>Gdx.graphics.getWidth()-sprite.getWidth()) {
             setX(Gdx.graphics.getWidth()-sprite.getWidth());
-        if (getX()<0)
+        }
+        // if figure collides with screen edge stop (left side)
+        if (getX()<0) {
             setX(0);
-        if (getY()>Gdx.graphics.getHeight()-sprite.getHeight())
-            setY(Gdx.graphics.getHeight()-sprite.getHeight());
-        if (getY()<0)
+        }
+        // if figure collides with screen edge (top)
+        if (getY()>Gdx.graphics.getHeight()) {
+            setY(Gdx.graphics.getHeight());
+        }
+        //if figure collides with screen edge (bottom)
+        if (getY()<0){
             setY(0);
+        }
+
     }
 
     public float getX (){
@@ -67,13 +76,14 @@ public class Figure {
     public void draw(SpriteBatch batch){
         sprite.draw(batch);
     }
-    public void updatePosition(){ //updateposition from speed
+    public void updatePosition() { //updateposition from speed
 
-        if (getSpeedX()==0 && getSpeedY()==0)
+        if (getSpeedX() == 0 && getSpeedY() == 0) {
             return;
-        setX(getX()+getSpeedX());
-        setY(getY()+getSpeedY());
-
+        }else {
+            setX(getX() + getSpeedX());
+            setY(getY() + getSpeedY());
+        }
 
     }
     public Rectangle getCollisionRectangle(){
@@ -89,8 +99,10 @@ public class Figure {
     //If we are at the screen egde...
     //...change speed to opposite direction ("bounce").
     public void bounceAtEdge(){
+
         if ((getX()>Gdx.graphics.getWidth()-sprite.getWidth()) || (getX()<0))
             setSpeedX(-getSpeedX());
+
         if ((getY()>Gdx.graphics.getHeight()-sprite.getHeight()) || (getY()<0))
             setSpeedY(-getSpeedY());
     }

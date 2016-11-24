@@ -25,7 +25,6 @@ public class Obstacle {
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
-
     public Rectangle getCollisionRectangle() {
         return new Rectangle(
                 sprite.getX(),
