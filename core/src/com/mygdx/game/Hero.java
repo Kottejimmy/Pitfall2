@@ -37,7 +37,7 @@ public class Hero extends Figure{
         setSpeedX(0);
         setSpeedY(3);
         getSprite().setFlip(false, false);
-        getSprite().setRotation(180);
+        getSprite().setRotation(30);
     }
 
 
