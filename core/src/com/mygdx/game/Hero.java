@@ -9,6 +9,16 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Hero extends Figure {
 
+    //enums for what state the hero are in
+    public enum HeroState{
+        WALKING,
+        FLYING;
+
+    }
+
+    //creates state and sets it to flying
+    private HeroState state = HeroState.FLYING;
+
     //This allows us to create our animation and give it traits
     Animation walkAnimationLeft, walkAnimationRight, walkAnimationUp, walkAnimationDown;
 
@@ -17,7 +27,7 @@ public class Hero extends Figure {
     private int ROWS = 4;
 
     //representing how long it should stay on each frame
-    float FRAME_DURATION = 0.040f;
+    float FRAME_DURATION = 0.080f;
     float time;
 
 
@@ -28,6 +38,7 @@ public class Hero extends Figure {
         HeroAnimationSheet(animationSheet);
 
         time = 0;
+
 
     }
 
@@ -76,20 +87,52 @@ public class Hero extends Figure {
     }
 
     public void goDown(){
-        setSpeedX(0);
         setSpeedY(-3);
     }
-    public void goLeft(){
-        setSpeedX(-3);
-        setSpeedY(0);
 
+    public void goLeft(){
+        if (getSpeedY()==0) {
+            setSpeedX(-3);
+        }
     }
 
     public void goRight(){
-        setSpeedX(3);
-        setSpeedY(0);
+
+       if (getSpeedY()==0) {
+           setSpeedX(3);
+       }
 
 
+    }
+
+    public void jump(){
+        if (getSpeedY()==0) {
+            setSpeedY(3);
+        }
+    }
+
+    public void stop(){
+        setSpeedX(0);
+    }
+
+    public void heroStateWalking(){
+        state = HeroState.WALKING;
+    }
+
+    public void heroStateFlying(){
+        state = HeroState.FLYING;
+    }
+
+    public HeroState getState(){
+        return state;
+    }
+    @Override
+    public Rectangle getCollisionRectangle(){
+        return new Rectangle(
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight());
     }
 
 

@@ -33,8 +33,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch  spriteBatch;    //he SpriteBatch is used to draw the texture onto the screen.
 	TextureRegion   currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
 
-
-
 	float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
 
 
@@ -54,7 +52,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		LEVEL_TEN;
 
 	}
-
 	Texture start;
 	Texture controls;
 	Texture gameover;
@@ -122,12 +119,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			obstacles = new ArrayList<Obstacle>();
 
 			backGroundImg = new Texture("Backgrounds/castle.jpg");
-			Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1366, 20);
-			Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 20, 350, 321, 34);
+			Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1300, 40);
+			Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 20, 350, 321, 40);
 			Obstacle brickplattform5 = new Obstacle("Hero/ladder.png", 920, 160, 50, 280);
-			Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 80, 400, 34);
-			Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 130, 321, 34);
-			Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 400, 400, 34);
+			Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 80, 400, 40);
+			Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 130, 321, 40);
+			Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 400, 400, 40);
 			obstacles.add(brickplattform1);
 			obstacles.add(sandfloor);
 			obstacles.add(brickplattform3);
@@ -138,7 +135,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		public void createfigures () {
 			figures = new ArrayList<Figure>();
 			hero = new Hero("Hero/Cng-Hiro.png", 200, 500, 120);
-			hero.setSpeedY(0);
 			figures.add(hero);
 
 
@@ -184,11 +180,20 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			for (Obstacle obstacle : obstacles) {
 				if (figures.get(i) instanceof Hero) {
 					if (figures.get(i).collidesWith(obstacle.getCollisionRectangle())) {
-						figures.get(i).setSpeedY(0);
-						break;
+
+						if (hero.getSpeedY()<1) {
+							hero.heroStateWalking();
+							figures.get(i).setSpeedY(0);
+							break;
+						}
 					}
 					if (!figures.get(i).collidesWith(obstacle.getCollisionRectangle())) {
-						figures.get(i).setSpeedY(-6);
+						//max speedY = -5 for each render speedY becomes faster (increase fallspeed)
+
+						if (figures.get(i).getSpeedY()>-5){
+							hero.heroStateFlying();
+							figures.get(i).setSpeedY(figures.get(i).getSpeedY()-0.02f);
+						}
 					}
 				}
 
@@ -196,7 +201,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		}
 
 	}
-		public void checkEnemyCollision() {
+
+	 	public void checkEnemyCollision() {
 			for(int i = 0; i < figures.size(); i++) {
 				if(figures.get(i) instanceof Bats) {
 					if(hero.collidesWith(figures.get(i).getCollisionRectangle())) {
@@ -217,17 +223,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
 		public void checkInput () {
-			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-				hero.goRight();
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-				hero.goLeft();
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				hero.goUp();
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				hero.goDown();
+			if(hero.getState()== Hero.HeroState.FLYING){
+
 			}
 
 		}
@@ -253,11 +250,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		spriteBatch.begin();
 		spriteBatch.draw(gameover, 480, 210);
 		spriteBatch.end();
-		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
-			state = GameState.START_SCREEN;
-		} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
-			System.exit(0);
-		}
+
 	}
 
 
@@ -313,12 +306,24 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
 		spriteBatch.end();
-		figures.get(0).setSpeedX(0);
+		if (hero.getState()== Hero.HeroState.WALKING && !(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.RIGHT))){
+			hero.setSpeedX(0);
+		}
+
 	}
 
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if (keycode == Input.Keys.SPACE && state == GameState.LEVEL_ONE){
+			hero.jump();
+		}
+		if (keycode == Input.Keys.RIGHT && state == GameState.LEVEL_ONE){
+			hero.goRight();
+		}
+		if (keycode == Input.Keys.LEFT && state == GameState.LEVEL_ONE){
+			hero.goLeft();
+		}
 		return false;
 	}
 
@@ -327,6 +332,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		if (keycode == Input.Keys.NUM_1 && state == GameState.GAME_OVER){
 				state = GameState.START_SCREEN;
 			}
+
+		if (keycode == Input.Keys.RIGHT&&state== GameState.LEVEL_ONE&& hero.getSpeedY()==0){
+			hero.stop();
+		}
+		if (keycode == Input.Keys.LEFT&&state== GameState.LEVEL_ONE&& hero.getSpeedY()==0){
+			hero.stop();
+		}
 		return true;
 	}
 

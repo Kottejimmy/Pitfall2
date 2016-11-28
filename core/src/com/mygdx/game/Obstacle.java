@@ -21,7 +21,6 @@ public class Obstacle {
 
     }
 
-
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }

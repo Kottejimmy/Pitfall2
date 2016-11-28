@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Figure {
 
-    private int speedX = 0;
-    private int speedY = 0;
+    private float speedX = 0;
+    private float speedY = 0;
 
 
     private int width;
@@ -69,16 +69,16 @@ public abstract class Figure {
     public void setY (float y){
         this.y = y;
     }
-    public int getSpeedX() {
+    public float getSpeedX() {
         return speedX;
     }
-    public void setSpeedX(int speedX) {
+    public void setSpeedX(float speedX) {
         this.speedX = speedX;
     }
-    public int getSpeedY() {
+    public float getSpeedY() {
         return speedY;
     }
-    public void setSpeedY(int speedY) {
+    public void setSpeedY(float speedY) {
         this.speedY = speedY;
     }
     public void updatePosition(){ //updateposition from speed
