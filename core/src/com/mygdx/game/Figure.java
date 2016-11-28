@@ -1,62 +1,73 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Figure {
+public abstract class Figure {
 
-    //sets speed variable
     private int speedX = 0;
     private int speedY = 0;
-    //field for each sprite
-    private Sprite sprite;
-    //constructor
 
-    public Figure(String textureFilePath,float x, float y, int size){ // path to the file, positions, size
-        //sets image to sprite
-        sprite = new Sprite(new Texture(textureFilePath));
-        //sets x and y coordinates
-        sprite.setX(x);
-        sprite.setY(y);
-        //sets size
-        sprite.setSize(size,size);
+
+    private int width;
+    private int height;
+    private float x;
+    private float y;
+
+
+
+    public Figure(float x, float y, int width,int height){ // path to the file, positions, size
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
+
+
     }
-    //when figures reaches screen edges it should stop
     public void stopAtEdge(){
-        // if figure collides with screen edge (right side)
-        if (getX()>Gdx.graphics.getWidth()-sprite.getWidth()) {
-            setX(Gdx.graphics.getWidth()-sprite.getWidth());
-        }
-        // if figure collides with screen edge stop (left side)
-        if (getX()<0) {
+        if (getX()>Gdx.graphics.getWidth()-getWidth())
+            setX(Gdx.graphics.getWidth()-getWidth());
+        if (getX()<0)
             setX(0);
-        }
-        // if figure collides with screen edge (top)
-        if (getY()>Gdx.graphics.getHeight()) {
-            setY(Gdx.graphics.getHeight());
-        }
-        //if figure collides with screen edge (bottom)
-        if (getY()<0){
+        if (getY()>Gdx.graphics.getHeight()-getHeight())
+            setY(Gdx.graphics.getHeight()-getHeight());
+        if (getY()<0)
             setY(0);
-        }
+    }
 
+    private void setHeight(int height) {
+        this.height = height;
+    }
+
+
+    private void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public float getX (){
-        return sprite.getX();
+        return x;
     }
     public void setX (float x){
-        sprite.setX(x);
+        this.x = x;
     }
     public float getY (){
-        return sprite.getY();
+        return y;
     }
     public void setY (float y){
-        sprite.setY(y);
+        this.y = y;
     }
     public int getSpeedX() {
         return speedX;
@@ -70,28 +81,28 @@ public class Figure {
     public void setSpeedY(int speedY) {
         this.speedY = speedY;
     }
-    public Sprite getSprite() {
-        return sprite;
-    }
-    public void draw(SpriteBatch batch){
-        sprite.draw(batch);
-    }
-    public void updatePosition() { //updateposition from speed
+    public void updatePosition(){ //updateposition from speed
 
-        if (getSpeedX() == 0 && getSpeedY() == 0) {
+        if (getSpeedX()==0 && getSpeedY()==0)
             return;
-        }else {
-            setX(getX() + getSpeedX());
-            setY(getY() + getSpeedY());
-        }
+        setX(getX()+getSpeedX());
+        setY(getY()+getSpeedY());
+
 
     }
+
+    public void draw(SpriteBatch spriteBatch){
+        spriteBatch.draw(getPathDirectory(), getX(), getY(), getWidth(), getHeight());
+    }
+
+    public abstract TextureRegion getPathDirectory();
+
     public Rectangle getCollisionRectangle(){
         return new Rectangle(
-                getSprite().getX(),
-                getSprite().getY(),
-                getSprite().getWidth(),
-                getSprite().getHeight());
+                getX(),
+             getY(),
+                getWidth(),
+               getHeight());
     }
     public boolean collidesWith(Rectangle otherRect){
             return getCollisionRectangle().overlaps(otherRect);
@@ -99,12 +110,12 @@ public class Figure {
     //If we are at the screen egde...
     //...change speed to opposite direction ("bounce").
     public void bounceAtEdge(){
-
-        if ((getX()>Gdx.graphics.getWidth()-sprite.getWidth()) || (getX()<0))
+        if ((getX()>Gdx.graphics.getWidth()-getWidth()) || (getX()<0))
             setSpeedX(-getSpeedX());
-
-        if ((getY()>Gdx.graphics.getHeight()-sprite.getHeight()) || (getY()<0))
+        if ((getY()>Gdx.graphics.getHeight()-getHeight()) || (getY()<0))
             setSpeedY(-getSpeedY());
     }
+
+
 
 }
