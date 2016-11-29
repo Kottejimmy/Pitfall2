@@ -12,12 +12,16 @@ public class Obstacle {
 
     Sprite sprite;
 
+
+
     public Obstacle(String textureFilepath, float x_position, float y_position, int width, int height) {
 
         sprite = new Sprite(new Texture(textureFilepath));
         sprite.setX(x_position);
         sprite.setY(y_position);
         sprite.setSize(width, height);
+
+
 
     }
 
@@ -31,5 +35,7 @@ public class Obstacle {
                 sprite.getY(),
                 sprite.getWidth(),
                 sprite.getHeight());
+
+
     }
 }

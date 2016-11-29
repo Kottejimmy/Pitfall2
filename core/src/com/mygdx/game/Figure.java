@@ -18,6 +18,7 @@ public abstract class Figure {
     private int height;
     private float x;
     private float y;
+    private final int collisionRadius;
 
 
 
@@ -26,6 +27,7 @@ public abstract class Figure {
         setY(y);
         setWidth(width);
         setHeight(height);
+        collisionRadius = getWidth()/15;
 
 
     }
@@ -99,10 +101,10 @@ public abstract class Figure {
 
     public Rectangle getCollisionRectangle(){
         return new Rectangle(
-                getX(),
-             getY(),
-                getWidth(),
-               getHeight());
+                getX()+collisionRadius,
+                getY()+collisionRadius,
+                getWidth()-(32+collisionRadius),
+                getHeight()-(32+collisionRadius));
     }
     public boolean collidesWith(Rectangle otherRect){
             return getCollisionRectangle().overlaps(otherRect);

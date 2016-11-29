@@ -18,14 +18,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	private static final int  FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
 	private static final int  FRAME_ROWS = 1;
+	private static int Life = 3;
 
 	BitmapFont font; //Declared to use text.
 
 	Texture backGroundImg;
 	ArrayList<Obstacle> obstacles;
 	ArrayList<Figure> figures;
+	InteractiveObject door;
 
-	Hero hero; // //an extra reference to Hero, for convenience.
+	Hero hero;// //an extra reference to Hero, for convenience.
+	Bats bats;
 
 	Animation  walkAnimation; // Allows us to create animated figure.
 	Texture walkSheet;		  //The Texture which will contain the whole sheet as a single image (texture).
@@ -64,6 +67,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		font = new BitmapFont();
 		font.setColor(Color.RED);
 		createObstacles();
+
 		createfigures();
 		createEnemy();
 		createTreasure();
@@ -98,6 +102,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			case LEVEL_ONE:
 				renderLevelOne();
 				break;
+			case LEVEL_TWO:
+				renderLevelTwo();
+				break;
 			case GAME_OVER:
 				gameOver();
 				break;
@@ -125,12 +132,33 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 80, 400, 40);
 			Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 130, 321, 40);
 			Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 400, 400, 40);
+			door = new InteractiveObject("Plattform/Door.png", 1150, 435, 60, 60);
 			obstacles.add(brickplattform1);
+
 			obstacles.add(sandfloor);
 			obstacles.add(brickplattform3);
 			obstacles.add(brickplattform2);
 			obstacles.add(brickplattform4);
 			obstacles.add(brickplattform5);
+		}
+		public void createObstacles2 (){
+			obstacles = new ArrayList<Obstacle>();
+			backGroundImg = new Texture("Backgrounds/castle.jpg");
+			Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1366, 20);
+			Obstacle rock = new Obstacle("Plattform/rockMoss.png", 400, 20, 200, 140);
+			Obstacle plattform1 = new Obstacle("Plattform/brickPlattform.png", 300, 344, 310, 45);
+			Obstacle plattform2 = new Obstacle("Plattform/brickPlattform.png", 800, 200, 310, 45);
+			Obstacle plattform3 = new Obstacle("Plattform/brickPlattform.png", 130, 520, 220, 45);
+			Obstacle mushroom = new Obstacle("Plattform/tallShroom_red.png", 800, 20, 65, 100);
+
+			obstacles.add(sandfloor);
+			obstacles.add(rock);
+			obstacles.add(plattform1);
+			obstacles.add(mushroom);
+			obstacles.add(plattform2);
+			obstacles.add(plattform3);
+
+
 		}
 		public void createfigures () {
 			figures = new ArrayList<Figure>();
@@ -140,13 +168,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		}
 		public void createEnemy() {
-			Bats bats;
-			bats = new Bats("Plattform/bat12.png", Gdx.graphics.getWidth() / 2-200, Gdx.graphics.getHeight() / 2+20, 50);
-			bats.setSpeedX(1);
+
+
+			bats = new Bats("Enemy/bat1.png", 70,100,80);
+			bats.setSpeedX(2);
 			figures.add(bats);
 
-			bats = new Bats("Plattform/bat12.png", Gdx.graphics.getWidth() / 2+600, Gdx.graphics.getHeight() / 2-200, 50);
-			bats.setSpeedX(1);
+			bats = new Bats("Enemy/bat1.png", 600, 400, 80);
+			bats.setSpeedX(2);
 			figures.add(bats);
 
 
@@ -180,7 +209,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			for (Obstacle obstacle : obstacles) {
 				if (figures.get(i) instanceof Hero) {
 					if (figures.get(i).collidesWith(obstacle.getCollisionRectangle())) {
+                        if (figures.get(i).collidesWith(door.getCollisionRectangle())){
+							createObstacles2();
+							state = GameState.LEVEL_TWO;
+							return;
 
+						}
 						if (hero.getSpeedY()<1) {
 							hero.heroStateWalking();
 							figures.get(i).setSpeedY(0);
@@ -194,10 +228,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 							hero.heroStateFlying();
 							figures.get(i).setSpeedY(figures.get(i).getSpeedY()-0.02f);
 						}
+
 					}
 				}
 
 			}
+
 		}
 
 	}
@@ -206,10 +242,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			for(int i = 0; i < figures.size(); i++) {
 				if(figures.get(i) instanceof Bats) {
 					if(hero.collidesWith(figures.get(i).getCollisionRectangle())) {
-						state = GameState.GAME_OVER;
-						createObstacles ();
-						createfigures();
-						createEnemy();
+						Life = Life -1;
+						if (Life <= 0) {
+							state = GameState.GAME_OVER;
+						}
+							createObstacles ();
+							createfigures();
+							createEnemy();
+
+
 					}
 				}
 			}
@@ -243,10 +284,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			System.exit(0);
 		}  else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)){
 			state = GameState.GAME_OVER;
+		} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)){
+			createObstacles2();
+			state = GameState.LEVEL_TWO;
+
 		}
 	}
 
 	public void gameOver() {
+		Life = 3;
 		spriteBatch.begin();
 		spriteBatch.draw(gameover, 480, 210);
 		spriteBatch.end();
@@ -289,7 +335,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		spriteBatch.draw(backGroundImg, 0, 20);
 		spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
 		spriteBatch.draw(currentFrame, 300, 120);
-		font.draw(spriteBatch,"Number of lives:", 20,700);
+		font.draw(spriteBatch,"Number of lives:" + Life, 20,700);
+		door.draw(spriteBatch);
 
 
 
@@ -310,6 +357,24 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			hero.setSpeedX(0);
 		}
 
+	}
+	public void renderLevelTwo (){
+		checkInput();
+
+		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		spriteBatch.begin();
+
+
+
+		spriteBatch.draw(backGroundImg, 0, 20);
+//		spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
+//		spriteBatch.draw(currentFrame, 300, 120);
+		font.draw(spriteBatch,"Number of lives:", 20,700);
+
+		for (Obstacle obstacle : obstacles)
+			obstacle.draw(spriteBatch);
+		spriteBatch.end();
 	}
 
 
