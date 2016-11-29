@@ -67,6 +67,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		createfigures();
 		createEnemy();
 		createTreasure();
+		createLadder();
 		start = new Texture("gamescenarios/pitfall2_startscreen.png");
 		controls = new Texture("gamescenarios/pitfall2_controls.png");
 		gameover = new Texture("gamescenarios/Game_Over_Screen.png");
@@ -121,7 +122,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			backGroundImg = new Texture("Backgrounds/castle.jpg");
 			Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1300, 40);
 			Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 20, 350, 321, 40);
-			Obstacle brickplattform5 = new Obstacle("Hero/ladder.png", 920, 160, 50, 280);
 			Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 80, 400, 40);
 			Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 130, 321, 40);
 			Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 400, 400, 40);
@@ -130,7 +130,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			obstacles.add(brickplattform3);
 			obstacles.add(brickplattform2);
 			obstacles.add(brickplattform4);
-			obstacles.add(brickplattform5);
+			Ladder ladder = new Ladder ("hero/ladder.png", 920, 160, 50, 280);
+			obstacles.add(ladder);
+		}
+		public void createLadder (){
+
+
 		}
 		public void createfigures () {
 			figures = new ArrayList<Figure>();
@@ -173,34 +178,41 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			}
 
 		}
+
 		public void checkObstacleCollision() {
 
 
-		for (int i =0;i<figures.size(); i++ ) {
+
 			for (Obstacle obstacle : obstacles) {
-				if (figures.get(i) instanceof Hero) {
-					if (figures.get(i).collidesWith(obstacle.getCollisionRectangle())) {
-
-						if (hero.getSpeedY()<1) {
-							hero.heroStateWalking();
-							figures.get(i).setSpeedY(0);
-							break;
-						}
+				if (obstacle instanceof Ladder){
+					if (hero.collidesWith(obstacle.getCollisionRectangle())){
+						hero.heroStateClimbing();
 					}
-					if (!figures.get(i).collidesWith(obstacle.getCollisionRectangle())) {
-						//max speedY = -5 for each render speedY becomes faster (increase fallspeed)
 
-						if (figures.get(i).getSpeedY()>-5){
-							hero.heroStateFlying();
-							figures.get(i).setSpeedY(figures.get(i).getSpeedY()-0.02f);
-						}
-					}
 				}
 
-			}
-		}
+				if (!(obstacle instanceof Ladder)) {
 
-	}
+					if (hero.collidesWith(obstacle.getCollisionRectangle())) {
+						if (hero.getSpeedY() < 0.1f) {
+							hero.heroStateWalking();
+							hero.setSpeedY(0);
+							break;
+						}
+					} else if (!hero.collidesWith(obstacle.getCollisionRectangle())) {
+						//max speedY = -5 for each render speedY becomes faster (increase fallspeed)
+						if (hero.getSpeedY() > -5) {
+							hero.heroStateFlying();
+							hero.setSpeedY(hero.getSpeedY() - 0.02f);
+						}
+					}
+
+				}
+			}
+			}
+
+
+
 
 	 	public void checkEnemyCollision() {
 			for(int i = 0; i < figures.size(); i++) {
@@ -323,6 +335,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		}
 		if (keycode == Input.Keys.LEFT && state == GameState.LEVEL_ONE){
 			hero.goLeft();
+		}
+		if (keycode == Input.Keys.UP &&state == GameState.LEVEL_ONE&&hero.getState() == Hero.HeroState.CLIMBING){
+			hero.goUp();
 		}
 		return false;
 	}

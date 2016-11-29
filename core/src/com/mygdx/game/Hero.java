@@ -12,7 +12,9 @@ public class Hero extends Figure {
     //enums for what state the hero are in
     public enum HeroState{
         WALKING,
-        FLYING;
+        FLYING,
+        CLIMBING;
+
 
     }
 
@@ -82,7 +84,6 @@ public class Hero extends Figure {
     }
 
     public void goUp(){
-        setSpeedX(0);
         setSpeedY(3);
     }
 
@@ -134,7 +135,9 @@ public class Hero extends Figure {
                 getWidth(),
                 getHeight());
     }
-
+    public void heroStateClimbing(){
+        state = HeroState.WALKING;
+    }
 
 
 
