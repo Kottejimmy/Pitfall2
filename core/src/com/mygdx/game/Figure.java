@@ -101,10 +101,10 @@ public abstract class Figure {
 
     public Rectangle getCollisionRectangle(){
         return new Rectangle(
-                getX()+collisionRadius,
-                getY()+collisionRadius,
-                getWidth()-(32+collisionRadius),
-                getHeight()-(32+collisionRadius));
+                getX()+getWidth()/2,
+                getY()+getHeight()/2,
+                getWidth()-(80),
+                getHeight()-(80));
     }
     public boolean collidesWith(Rectangle otherRect){
             return getCollisionRectangle().overlaps(otherRect);

@@ -31,10 +31,10 @@ public class Obstacle {
 
     public Rectangle getCollisionRectangle() {
         return new Rectangle(
-                sprite.getX(),
-                sprite.getY(),
+                sprite.getX()+25 ,
+                sprite.getY()+40,
                 sprite.getWidth(),
-                sprite.getHeight());
+                1);
 
 
     }
