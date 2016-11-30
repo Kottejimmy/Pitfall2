@@ -31,9 +31,9 @@ public class Obstacle {
 
     public Rectangle getCollisionRectangle() {
         return new Rectangle(
-                sprite.getX()+25 ,
-                sprite.getY()+40,
-                sprite.getWidth(),
+                sprite.getX()+40 ,
+                sprite.getY()+sprite.getHeight(),
+                sprite.getWidth()-90,
                 1);
 
 

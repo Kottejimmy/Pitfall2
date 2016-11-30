@@ -30,7 +30,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	InteractiveObject ladder;
 
 	Hero hero;// //an extra reference to Hero, for convenience.
-	Bats bats;
+
 
 	Animation  walkAnimation; // Allows us to create animated figure.
 	Texture walkSheet;		  //The Texture which will contain the whole sheet as a single image (texture).
@@ -123,18 +123,18 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		backGroundImg = new Texture("Backgrounds/castle.jpg");
 		Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1300, 40);
-		Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 20, 350, 321, 40);
-		Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 80, 400, 40);
+		Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 0, 350, 321, 40);
+		Obstacle brickplattform4 = new Obstacle("Plattform/brickPlattform.png", 300, 130, 400, 40);
 		Obstacle brickplattform2 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 130, 321, 40);
-		Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 421, 400, 400, 40);
+		Obstacle brickplattform3 = new Obstacle("Plattform/brickPlattform.png", Gdx.graphics.getWidth() - 400, 400, 400, 40);
 		obstacles.add(brickplattform1);
 		obstacles.add(sandfloor);
 		obstacles.add(brickplattform3);
 		obstacles.add(brickplattform2);
 		obstacles.add(brickplattform4);
 
-		door = new InteractiveObject("Plattform/Door.png", 1150, 435, 60, 60);
-		ladder = new InteractiveObject("Hero/ladder.png", 920, 160, 50, 280);
+		door = new InteractiveObject("Plattform/Door.png", 1185, 435, 120, 120);
+		ladder = new InteractiveObject("Hero/ladder.png", 950, 160, 50, 280);
 		}
 
 	public void createObstacles2 (){
@@ -159,17 +159,20 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	public void createfigures () {
 			figures = new ArrayList<Figure>();
-			hero = new Hero("Hero/Cng-Hiro.png", 200, 500, 120);
+			hero = new Hero("Hero/Cng-Hiro.png", 0, 768, 120);
 			figures.add(hero);
 		}
 
 	public void createEnemy() {
-			bats = new Bats("Enemy/bat1.png", 70,100,80);
-			bats.setSpeedX(2);
+		Bats bats;
 
+		bats = new Bats("Enemy/bat1.png", 70,170,80);
+		bats.setSpeedX(2);
+		figures.add(bats);
 
-			bats = new Bats("Enemy/bat1.png", 600, 400, 80);
-			bats.setSpeedX(2);
+		bats = new Bats("Enemy/bat1.png", 600, 440, 80);
+		bats.setSpeedX(2);
+		figures.add(bats);
 
 		}
 
@@ -196,23 +199,43 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		}
 
 	public void checkObstacleCollision() {
+
+		//hero collides with door get to level2
 		if (hero.collidesWith(door.getCollisionRectangle())) {
 			createObstacles2();
 			state = GameState.LEVEL_TWO;
 			return;
 		}
+		//hero collides with ladder
+		if (hero.collidesWith(ladder.getCollisionRectangle())){
+			//hero cant "fly past" ladder
+			if (hero.getState()== Hero.HeroState.FLYING){
+				hero.stopComplete();
+			}
+			hero.heroStateClimbing();
+			//hero not able to go below ladder
+			if (hero.getY()<ladder.sprite.getY()){
+				hero.setY(ladder.sprite.getY());
+			}
+		}
 
-
+			//loops through all obstacles to see if hero collides with them
 			for (Obstacle obstacle : obstacles) {
-
+					//hero is not able to jump through platform (except if he is climbing a ladder)
 					if (hero.collidesWith(obstacle.getCollisionRectangle())) {
-						if (hero.getSpeedY()<1) {
+						if(hero.getY()<obstacle.sprite.getY()&&!(hero.getState()== Hero.HeroState.CLIMBING)){
+							hero.setY(obstacle.sprite.getY()-hero.getHeight()+20);
+							return;
+						}
+						//if hero collides with obstacle (from above) put him ontop of obstacle and set Yspeed to 0
+						if (hero.getSpeedY()<1&&!(hero.collidesWith(ladder.getCollisionRectangle()))) {
 							hero.setSpeedY(0);
 							hero.heroStateWalking();
-							hero.setY(obstacle.sprite.getY()+obstacle.sprite.getHeight());
+							hero.setY(obstacle.sprite.getY()+obstacle.sprite.getHeight()-10);
 							break;
 						}
 					}
+					//hero falls when he is not colliding with anything
 					if (!hero.collidesWith(obstacle.getCollisionRectangle())&& !(hero.collidesWith(ladder.getCollisionRectangle()))) {
 						//max speedY = -5 for each render speedY becomes faster (increase fallspeed)
 						if (hero.getSpeedY()>-5){
@@ -224,12 +247,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					}
 				}
 
-		if (hero.collidesWith(ladder.getCollisionRectangle())){
-			if (hero.getState()== Hero.HeroState.FLYING){
-				hero.stop();
-			}
-			hero.heroStateClimbing();
-		}
+
 	}
 
 	public void checkEnemyCollision() {
@@ -240,11 +258,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 						if (Life <= 0) {
 							state = GameState.GAME_OVER;
 						}
-							createObstacles ();
-							createfigures();
-							createEnemy();
-
-
+						createObstacles ();
+						createfigures();
+						createEnemy();
 					}
 				}
 			}
@@ -298,8 +314,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	}
 
 	public void renderLevelOne(){
-		checkInput();
-
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
@@ -314,38 +328,41 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		for (Figure figure : figures) {
 			figure.updatePosition();
 		}
+
 		spriteBatch.begin();
-
-
-
 		spriteBatch.draw(backGroundImg, 0, 20);
 		spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
-		spriteBatch.draw(currentFrame, 300, 120);
-		font.draw(spriteBatch,"Number of lives:" + Life, 20,700);
+		spriteBatch.draw(currentFrame, 300, 170);
+		font.draw(spriteBatch,"Number of lives:" + Life, 0,780);
+
+		//draws all platforms on the map
+		for (Obstacle obstacle : obstacles) {
+			obstacle.draw(spriteBatch);
+		}
+		ladder.draw(spriteBatch);
 		door.draw(spriteBatch);
-
-
-
-
-
 		//Update all game figures' positions based on their speeds
 		for (Figure figure : figures) {
 			figure.draw(spriteBatch);
 		}
 
-
-		for (Obstacle obstacle : obstacles) {
-			obstacle.draw(spriteBatch);
-		}
-
-		ladder.draw(spriteBatch);
-
 		spriteBatch.end();
-
-
-		if (hero.getState()== Hero.HeroState.WALKING && !(Gdx.input.isKeyPressed(Input.Keys.RIGHT)||(Gdx.input.isKeyPressed(Input.Keys.LEFT)))){
+		//makes the hero stop when he is not walking
+		if (hero.getState()== Hero.HeroState.WALKING && !(Gdx.input.isKeyPressed(Input.Keys.RIGHT))&& !(Gdx.input.isKeyPressed(Input.Keys.LEFT))){
 			hero.setSpeedX(0);
 		}
+		//makes the hero lose momentum during jump and falling
+		if (hero.getState()== Hero.HeroState.FLYING && hero.getSpeedX()<0){
+			hero.setSpeedX(hero.getSpeedX()+0.03f);
+		}
+		if (hero.getState()== Hero.HeroState.FLYING && hero.getSpeedX()>0){
+			hero.setSpeedX(hero.getSpeedX()-0.03f);
+		}
+		//makes the hero stop when he is on ladders
+		if (hero.getState()== Hero.HeroState.CLIMBING&&!(Gdx.input.isKeyPressed(Input.Keys.UP))&& !(Gdx.input.isKeyPressed(Input.Keys.DOWN))){
+			hero.stopHeight();
+		}
+
 
 	}
 
@@ -383,6 +400,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		if (keycode == Input.Keys.UP && hero.getState() == Hero.HeroState.CLIMBING && state == GameState.LEVEL_ONE){
 			hero.goUp();
 		}
+		if (keycode == Input.Keys.DOWN && hero.getState() == Hero.HeroState.CLIMBING && state == GameState.LEVEL_ONE){
+			hero.goDown();
+		}
 		return false;
 	}
 
@@ -393,13 +413,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			}
 
 		if (keycode == Input.Keys.RIGHT&&state== GameState.LEVEL_ONE&& hero.getSpeedY()==0){
-			hero.stop();
+			hero.stopComplete();
 		}
 		if (keycode == Input.Keys.LEFT&&state== GameState.LEVEL_ONE&& hero.getSpeedY()==0){
-			hero.stop();
+			hero.stopComplete();
 		}
 		if (keycode == Input.Keys.UP && hero.getState() == Hero.HeroState.CLIMBING && state == GameState.LEVEL_ONE){
-			hero.stop();
+			hero.stopComplete();
+		}
+		if (keycode == Input.Keys.DOWN && hero.getState() == Hero.HeroState.CLIMBING && state == GameState.LEVEL_ONE){
+			hero.stopComplete();
 		}
 		return true;
 	}

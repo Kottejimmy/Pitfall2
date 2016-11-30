@@ -107,12 +107,16 @@ public class Hero extends Figure {
 
     public void jump(){
         if (getSpeedY()==0) {
-            setSpeedY(4);
+            setSpeedY(3.5f);
         }
     }
 
-    public void stop(){
+    public void stopComplete(){
         setSpeedX(0);
+        setSpeedY(0);
+    }
+
+    public void stopHeight(){
         setSpeedY(0);
     }
 
