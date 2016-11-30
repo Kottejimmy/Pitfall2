@@ -11,27 +11,24 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Bats extends Figure {
 
     Animation flyAnimationLeft, flyAnimationRight;
+    float FRAME_DURATION = 0.040f;
+    float time;
     private int COLUMNS = 3;
     private int ROWS = 4;
-
-    float FRAME_DURATION =  0.040f;
-    float time;
-
-
 
 
     public Bats(String animationSheet, float x, float y, int size) {
 
-        super(x, y, size,size);
+        super(x, y, size, size);
 
         EnemyAnimationSheet(animationSheet);
 
         time = 0;
 
 
-
     }
-    public void EnemyAnimationSheet (String animationSheet) {
+
+    public void EnemyAnimationSheet(String animationSheet) {
 
         Texture enemyAnimation = new Texture(Gdx.files.internal(animationSheet));
 
@@ -42,7 +39,7 @@ public class Bats extends Figure {
     }
 
 
-    public void updatePosition(){
+    public void updatePosition() {
         //First call the method "updatePositionFromSpeed" in the Figure super class
         super.updatePosition();
 
@@ -58,9 +55,7 @@ public class Bats extends Figure {
 
         if (getSpeedX() < 0) {
             return flyAnimationLeft.getKeyFrame(time, true);
-        }
-
-        else if (getSpeedX() > 0) {
+        } else if (getSpeedX() > 0) {
             return flyAnimationRight.getKeyFrame(time, true);
         }
 

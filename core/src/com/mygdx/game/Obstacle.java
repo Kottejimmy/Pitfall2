@@ -13,14 +13,12 @@ public class Obstacle {
     Sprite sprite;
 
 
-
     public Obstacle(String textureFilepath, float x_position, float y_position, int width, int height) {
 
         sprite = new Sprite(new Texture(textureFilepath));
         sprite.setX(x_position);
         sprite.setY(y_position);
         sprite.setSize(width, height);
-
 
 
     }
@@ -31,9 +29,9 @@ public class Obstacle {
 
     public Rectangle getCollisionRectangle() {
         return new Rectangle(
-                sprite.getX()+40 ,
-                sprite.getY()+sprite.getHeight(),
-                sprite.getWidth()-90,
+                sprite.getX() + 40,
+                sprite.getY() + sprite.getHeight(),
+                sprite.getWidth() - 90,
                 1);
 
 
