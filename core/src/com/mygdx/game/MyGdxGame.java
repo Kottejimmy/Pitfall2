@@ -568,6 +568,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             hero.stopHeight();
         }
 
+        if(!(hero.getSpeedY()==0)) {
+            System.out.println(hero.getSpeedY());
+        }
 
 
     }
