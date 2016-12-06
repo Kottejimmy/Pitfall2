@@ -11,7 +11,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
@@ -19,6 +20,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     private static final int FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
     private static final int FRAME_ROWS = 1;
     private static int Life = 3;
+    private static int score = 0;
 
     BitmapFont font; //Declared to use text.
     Texture start;
@@ -33,6 +35,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     InteractiveObject doorTwo;
     InteractiveObject doorThree;
     Texture cactus;
+    ArrayList<Integer> highscore;
+    BitmapFont highscorefont;
+    Texture high_score;
+    ArrayList<Coin> coins;
 
 
 
@@ -42,7 +48,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     Animation walkAnimation; // Allows us to create animated figure.
     Texture walkSheet;          //The Texture which will contain the whole sheet as a single image (texture).
     TextureRegion[] walkFrames; //Declare walkFrames as an array, the array holds each frame of the animation.
-    SpriteBatch spriteBatch;    //he SpriteBatch is used to draw the texture onto the screen.
+    SpriteBatch spriteBatch;    //The SpriteBatch is used to draw the texture onto the screen.
     TextureRegion currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
 
     float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
@@ -52,15 +58,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public void create() {
         font = new BitmapFont();
         font.setColor(Color.RED);
+        highscorefont = new BitmapFont();
+        highscorefont.setColor(Color.WHITE);
+
+
+        spriteBatch = new SpriteBatch();
         createObstacles();
-
-
         createHero();
         createEnemyOne();
         createTreasure();
-        start = new Texture("gamescenarios/pitfall2_startscreen.png");
-        controls = new Texture("gamescenarios/pitfall2_controls.png");
-        gameover = new Texture("gamescenarios/Game_Over_Screen.png");
+        createScenarios();
         Gdx.input.setInputProcessor(this);
 
 
@@ -97,7 +104,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             case GAME_OVER:
                 gameOver();
                 break;
-
+            case HIGH_SCORE:
+                showHighScore();
+                break;
         }
 
 
@@ -111,6 +120,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     }
     public void createObstacles() {
+        coins = new ArrayList<Coin>();
         obstacles = new ArrayList<Obstacle>();
         interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/castle.jpg");
@@ -125,6 +135,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(brickplattform2);
         obstacles.add(brickplattform4);
 
+        Coin coin1 = new Coin("Plattform/coiiins.png", 350, 500, 50);
+        Coin coin2 = new Coin("Plattform/coiiins.png", 750, 400, 50);
+        coins.add(coin1);
+        coins.add(coin2);
         door = new InteractiveObject("Plattform/Door.png", 1185, 420, 120, 90);
         InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 950, 150, 50, 265);
         interActiveObjects.add(ladder);
@@ -246,6 +260,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     }
 
+    public void createScenarios(){
+        start = new Texture("gamescenarios/pitfall2_startscreen.png");
+        controls = new Texture("gamescenarios/pitfall2_controls.png");
+        gameover = new Texture("gamescenarios/Game_Over_Screen.png");
+        high_score = new Texture("gamescenarios/high_score.png");
+    }
+
 
     public void createTreasure() {
         //1 Creates a texture from animation_sheet.png which is placed in the walksheet directory of the project
@@ -261,7 +282,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             }
 
             walkAnimation = new Animation(0.080f, walkFrames); //3 This is where the Animation is created. The first parameter tells the animation, how much time is allocated for each frame.
-            spriteBatch = new SpriteBatch(); //4 Initialises the SpriteBatch which will draw the frame.
+             //4 Initialises the SpriteBatch which will draw the frame.
             stateTime = 0f; // Resets the stateTime to 0. It will start accumulating the time each render call.
 
 
@@ -360,6 +381,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             return;
         }
 
+        Iterator<Coin> iter = coins.iterator();
+        while (iter.hasNext()) {
+            Coin coin = iter.next();
+            if (hero.collidesWith(coin.getCollisionRectangle())) {
+                iter.remove();
+                score += 500;
+            }
+        }
+
+
         for (int i = 0; i < figures.size(); i++) {
                 if (hero.collidesWith(figures.get(i).getCollisionRectangle())) {
                         Life = Life - 1;
@@ -410,7 +441,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createObstacles();
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             state = GameState.CONTROLS;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+        }else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)){
+            state = GameState.HIGH_SCORE;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
             System.exit(0);
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
             state = GameState.GAME_OVER;
@@ -430,11 +463,29 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void gameOver() {
+        highscore.add(score);
+        Collections.sort(highscore);
+        Collections.reverse(highscore);
+        score = 0;
         Life = 3;
         spriteBatch.begin();
         spriteBatch.draw(gameover, 480, 210);
         spriteBatch.end();
 
+    }
+
+    public void showHighScore(){
+
+        int xpos = 450;
+        spriteBatch.begin();
+        spriteBatch.draw(high_score, 500, 220);
+        if (highscore.size() != 0) {
+            for (int i = 1; i <= highscore.size(); i++) {
+                highscorefont.draw(spriteBatch, i + " " + highscore.get(i), xpos, 240);
+                xpos -= 50;
+            }
+        }
+        spriteBatch.end();
     }
 
     public void showControls() {
@@ -478,6 +529,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             object.draw(spriteBatch);
         }
         door.draw(spriteBatch);
+
+        for (InteractiveObject coin : coins){
+            coin.draw(spriteBatch);
+        }
 
         //Update all game figures' positions based on their speeds
         hero.draw(spriteBatch);
@@ -717,6 +772,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         START_SCREEN,
         CONTROLS,
         GAME_OVER,
+        HIGH_SCORE,
         LEVEL_ONE,
         LEVEL_TWO,
         LEVEL_THREE,
