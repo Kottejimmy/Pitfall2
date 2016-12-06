@@ -160,7 +160,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
         ladder = new InteractiveObject("Hero/ladder.png", 935, 380, 60, 166);
-        doorTwo = new InteractiveObject("Plattform/Door.png", 1100,540,80,80);
+        doorTwo = new InteractiveObject("Plattform/Door.png", 1100,520,80,80);
 
 
     }
@@ -321,25 +321,45 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void checkEnemyCollision() {
+        if (hero.getY() < 2) {
+            Life = Life -1;
+            Life = Life - 1;
+            if (Life <= 0) {
+                state = GameState.GAME_OVER;
+            }
+            if (state == GameState.LEVEL_ONE) {
+                createObstacles();
+            }
+            if (state == GameState.LEVEL_TWO) {
+                createObstacles2();
+            }
+            if (state == GameState.LEVEL_THREE) {
+                createObstacleLevelThree();
+            }
+            createfigures();
+            createEnemy();
+            createScorpion();
+            return;
+        }
         for (int i = 0; i < figures.size(); i++) {
             if (figures.get(i) instanceof Bats) {
-                if (hero.collidesWith(figures.get(i).getCollisionRectangle())) {
-                    Life = Life - 1;
-                    if (Life <= 0) {
-                        state = GameState.GAME_OVER;
-                    }
-                    if(state == GameState.LEVEL_ONE) {
-                        createObstacles();
-                    }
-                    if(state == GameState.LEVEL_TWO) {
-                        createObstacles2();
-                    }
-                    if(state == GameState.LEVEL_THREE) {
-                        createObstacleLevelThree();
-                    }
-                    createfigures();
-                    createEnemy();
-                    createScorpion();
+                if (hero.collidesWith(figures.get(i).getCollisionRectangle())|| hero.collidesWith((scorpion.getCollisionRectangle()))) {
+                        Life = Life - 1;
+                        if (Life <= 0) {
+                            state = GameState.GAME_OVER;
+                        }
+                        if (state == GameState.LEVEL_ONE) {
+                            createObstacles();
+                        }
+                        if (state == GameState.LEVEL_TWO) {
+                            createObstacles2();
+                        }
+                        if (state == GameState.LEVEL_THREE) {
+                            createObstacleLevelThree();
+                        }
+                        createfigures();
+                        createEnemy();
+                        createScorpion();
                 }
             }
         }
@@ -510,9 +530,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if (hero.getState() == Hero.HeroState.CLIMBING && !(Gdx.input.isKeyPressed(Input.Keys.UP)) && !(Gdx.input.isKeyPressed(Input.Keys.DOWN))) {
             hero.stopHeight();
         }
-        if(!(hero.getSpeedY()==0)) {
-            System.out.println(hero.getSpeedY());
-        }
+
 
 
 
@@ -545,7 +563,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(currentFrame, 1110, 570);
         spriteBatch.draw(currentFrame, 580, 130);
         spriteBatch.draw(currentFrame, 80, 100);
-        font.draw(spriteBatch, "Number of lives:" + Life, 0, 780);
+        font.draw(spriteBatch, "Number of lives:" + Life, 0, 720);
 
 
         for(Obstacle obstacle: obstacles) {
@@ -576,9 +594,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             hero.stopHeight();
         }
 
-        if(!(hero.getSpeedY()==0)) {
-            System.out.println(hero.getSpeedY());
-        }
 
 
     }

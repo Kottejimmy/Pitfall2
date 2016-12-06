@@ -33,7 +33,5 @@ public class Obstacle {
                 sprite.getY() + sprite.getHeight(),
                 sprite.getWidth() - 90,
                 1);
-
-
     }
 }
