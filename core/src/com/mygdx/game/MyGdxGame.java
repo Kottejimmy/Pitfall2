@@ -27,13 +27,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     Texture backGroundImg;
     Texture backGroundLevelThree;
     ArrayList<Obstacle> obstacles;
-
+    ArrayList<InteractiveObject> interActiveObjects;
     ArrayList<Figure> figures;
     InteractiveObject door;
     InteractiveObject doorTwo;
     InteractiveObject doorThree;
-    InteractiveObject ladder;
-    Scorpion scorpion;
+    Texture cactus;
 
 
 
@@ -56,9 +55,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         createObstacles();
 
 
-        createfigures();
-        createEnemy();
-        createScorpion();
+        createHero();
+        createEnemyOne();
         createTreasure();
         start = new Texture("gamescenarios/pitfall2_startscreen.png");
         controls = new Texture("gamescenarios/pitfall2_controls.png");
@@ -112,10 +110,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         backGroundImg.dispose();
 
     }
-
     public void createObstacles() {
         obstacles = new ArrayList<Obstacle>();
-
+        interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/castle.jpg");
         Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1300, 40);
         Obstacle brickplattform1 = new Obstacle("Plattform/brickPlattform.png", 0, 350, 321, 25);
@@ -129,14 +126,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(brickplattform4);
 
         door = new InteractiveObject("Plattform/Door.png", 1185, 420, 120, 90);
-        ladder = new InteractiveObject("Hero/ladder.png", 950, 160, 50, 265);
+        InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 950, 150, 50, 265);
+        interActiveObjects.add(ladder);
     }
 
-    public void createObstacles2() {
+    public void createObstaclesTwo() {
         obstacles = new ArrayList<Obstacle>();
+        interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/Desert.jpg");
         Obstacle sandfloor = new Obstacle("Plattform/brickPlattform.png", 0, 0, 1366, 20);
-        Obstacle cactus = new Obstacle("Plattform/CactusSprite.png", 550, 20, 200, 140);
         Obstacle plattform1 = new Obstacle("Plattform/brickPlattform.png", 260, 344, 200, 25);
         Obstacle plattform2 = new Obstacle("Plattform/brickPlattform.png", 790, 360, 200, 25);
         Obstacle plattform3 = new Obstacle("Plattform/brickPlattform.png", 20, 215, 200, 25);
@@ -149,7 +147,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         obstacles.add(plattform4);
         obstacles.add(sandfloor);
-        obstacles.add(cactus);
         obstacles.add(plattform1);
         obstacles.add(plattform2);
         obstacles.add(plattform3);
@@ -159,31 +156,37 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(plattform8);
 
 
-        ladder = new InteractiveObject("Hero/ladder.png", 935, 380, 60, 166);
-        doorTwo = new InteractiveObject("Plattform/Door.png", 1100,520,80,80);
+        InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 935, 380, 50, 162);
+        doorTwo = new InteractiveObject("Plattform/Door.png", 1200,540,80,80);
+        cactus = new Texture("Plattform/CactusSprite.png");
+        interActiveObjects.add(ladder);
 
 
     }
-    public void createObstacleLevelThree() {
+
+    public void createObstaclesThree() {
         obstacles = new ArrayList<Obstacle>();
+        interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundLevelThree = new Texture("Backgrounds/iceMap.jpg");
 
-        Obstacle iceForm = new Obstacle("Plattform/iceForm1.png", 30,500,250,60);
-        Obstacle iceForm2 = new Obstacle("Plattform/iceForm1.png", 480,500,200,60);
-        Obstacle iceForm3 = new Obstacle("Plattform/iceForm1.png", 900,500,300,60);
-        Obstacle iceForm4 = new Obstacle("Plattform/iceForm1.png", 410,300,260,60);
+        Obstacle iceForm = new Obstacle("Plattform/iceForm1.png", 30,500,250,60,true);
+        Obstacle iceForm2 = new Obstacle("Plattform/iceForm1.png", 480,500,200,60,true);
+        Obstacle iceForm3 = new Obstacle("Plattform/iceForm1.png", 900,500,300,60,true);
+        Obstacle iceForm4 = new Obstacle("Plattform/iceForm1.png", 410,300,260,60,true);
         Obstacle iceForm5 = new Obstacle("Plattform/iceForm3.png", 60,300,110,60);
         Obstacle iceForm6 = new Obstacle("Plattform/iceForm4.png", -50,-190,400,300);
         Obstacle iceForm7 = new Obstacle("Plattform/iceForm4.png", 900,-190,400,300);
-        Obstacle iceForm8 = new Obstacle("Plattform/iceForm1.png", 900,300,320,60);
+        Obstacle iceForm8 = new Obstacle("Plattform/iceForm1.png", 900,300,320,60,true);
         Obstacle iceForm9 = new Obstacle("Plattform/ice5.png", 550,70,120,60);
-
         Obstacle iceForm10 = new Obstacle("Plattform/iceform2.png", 1250,510,50,50);
         Obstacle iceForm13 = new Obstacle("Plattform/iceform2.png", 1200,510,50,50);
         Obstacle iceForm11 = new Obstacle("Plattform/iceform2.png", 900,440,50,50);
         Obstacle iceForm12 = new Obstacle("Plattform/iceform2.png", 900,370,50,50);
-        ladder = new InteractiveObject("Hero/ladder.png", 550, 360, 50, 200);
-        ladder = new InteractiveObject("Hero/ladder.png", 1000, 150, 50, 200);
+
+        InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 100, 90, 50, 250);
+        InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 550, 350, 50, 200);
+        InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 270);
+
         doorThree = new InteractiveObject("Plattform/Door.png", 1100, 350, 80, 80);
 
 
@@ -200,40 +203,49 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(iceForm11);
         obstacles.add(iceForm12);
         obstacles.add(iceForm13);
-
-
-
-    }
-
-    public void createfigures() {
-        figures = new ArrayList<Figure>();
-        hero = new Hero("Hero/Cng-Hiro.png", 0, 500, 80);
-        figures.add(hero);
-    }
-
-    public void createEnemy() {
-        Bats bats;
-
-        bats = new Bats("Enemy/bat1.png", 70, 170, 60);
-        bats.setSpeedX(2);
-        figures.add(bats);
-
-        bats = new Bats("Enemy/bat1.png", 600, 440, 60);
-        bats.setSpeedX(2);
-        figures.add(bats);
-
-    }
-    public void createScorpion() {
-
-
-        scorpion = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 600,600,60,50);
-        scorpion.setSpeedX(1);
-        scorpion.setX(800);
-        scorpion.setY(544);
-
+        interActiveObjects.add(ladder1);
+        interActiveObjects.add(ladder2);
+        interActiveObjects.add(ladder3);
 
 
     }
+
+    public void createHero() {
+        hero = new Hero("Hero/Cng-Hiro.png",0,500,80);
+    }
+    public void createEnemyOne() {
+
+       figures = new ArrayList<Figure>();
+        Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
+        Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
+        figures.add(bat1);
+        figures.add(bat2);
+
+    }
+
+    public void createEnemyTwo() {
+        figures = new ArrayList<Figure>(figures);
+
+        Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
+        Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 800,544,60,50);
+        figures.add(scorpion1);
+        figures.add(bat1);
+        figures.add(bat2);
+
+    }
+    public void createEnemyThree() {
+        figures = new ArrayList<Figure>(figures);
+
+        Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
+        Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 800,544,60,50);
+        figures.add(scorpion1);
+        figures.add(bat1);
+        figures.add(bat2);
+
+    }
+
 
     public void createTreasure() {
         //1 Creates a texture from animation_sheet.png which is placed in the walksheet directory of the project
@@ -261,30 +273,35 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         //hero collides with door get to level2
         if (hero.collidesWith(door.getCollisionRectangle())) {
-            createObstacles2();
+            figures.clear();
+            obstacles.clear();
+            createHero();
+            createEnemyTwo();
+            createObstaclesTwo();
             state = GameState.LEVEL_TWO;
-            hero.setX(10);
-            hero.setY(600);
+
             return;
         }
       if(state == GameState.LEVEL_TWO && hero.collidesWith(doorTwo.getCollisionRectangle())) {
-            createObstacleLevelThree();
+            createObstaclesThree();
             state = GameState.LEVEL_THREE;
             hero.setX(10);
             hero.setY(600);
             return;
       }
 
-        //hero collides with ladder
-        if (hero.collidesWith(ladder.getCollisionRectangle())) {
-            //hero cant "fly past" ladder
-            if (hero.getState() == Hero.HeroState.FLYING) {
-                hero.stopComplete();
-            }
-            hero.heroStateClimbing();
-            //hero not able to go below ladder
-            if (hero.getY() < ladder.sprite.getY()) {
-                hero.setY(ladder.sprite.getY());
+        for (InteractiveObject object : interActiveObjects){
+            if (hero.collidesWith(object.getCollisionRectangle())) {
+             //hero cant "fly past" ladder
+             if (hero.getState() == Hero.HeroState.FLYING) {
+                    hero.stopComplete();
+             }
+             hero.heroStateClimbing();
+                //hero not able to go below ladder
+             if (hero.getY() < object.sprite.getY()) {
+                hero.setY(object.sprite.getY());
+             }
+                return;
             }
         }
 
@@ -294,73 +311,81 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             //hero is not able to jump through platform (except if he is climbing a ladder)
             if (hero.collidesWith(obstacle.getCollisionRectangle())) {
                 if (hero.getY() < obstacle.sprite.getY() && !(hero.getState() == Hero.HeroState.CLIMBING)) {
-                    hero.setY(obstacle.sprite.getY() - hero.getHeight() + 20);
+                    hero.setSpeedY(-1);
                     return;
                 }
                 //if hero collides with obstacle (from above) put him ontop of obstacle and set Yspeed to 0
-                if (hero.getSpeedY() < 1 && !(hero.collidesWith(ladder.getCollisionRectangle()))) {
+                for (InteractiveObject object : interActiveObjects)
+                if (hero.getSpeedY() < 1 && !(hero.collidesWith(object.getCollisionRectangle()))) {
                     hero.setSpeedY(0);
                     hero.heroStateWalking();
                     hero.setY(obstacle.sprite.getY() + obstacle.sprite.getHeight() - 10);
-                    break;
+                    return;
                 }
-            }
-            //hero falls when he is not colliding with anything
-            if (!hero.collidesWith(obstacle.getCollisionRectangle()) && !(hero.collidesWith(ladder.getCollisionRectangle()))) {
-                //max speedY = -5 for each render speedY becomes faster (increase fallspeed)
-                if (hero.getSpeedY() > -5) {
-                    hero.heroStateFlying();
-                    hero.setSpeedY(hero.getSpeedY() - 0.01f);
-
-                }
-
             }
         }
 
-
+    //max speedY = -5 for each render speedY becomes faster (increase fallspeed)
+                if (hero.getSpeedY() > -5) {
+                    hero.heroStateFlying();
+                    hero.setSpeedY(hero.getSpeedY() - 0.1f);
+                }
     }
 
     public void checkEnemyCollision() {
         if (hero.getY() < 2) {
             Life = Life -1;
-            Life = Life - 1;
             if (Life <= 0) {
                 state = GameState.GAME_OVER;
             }
             if (state == GameState.LEVEL_ONE) {
+                figures.clear();
+                obstacles.clear();
                 createObstacles();
+                createEnemyOne();
             }
             if (state == GameState.LEVEL_TWO) {
-                createObstacles2();
+                figures.clear();
+                obstacles.clear();
+                createObstaclesTwo();
+                createEnemyTwo();
             }
             if (state == GameState.LEVEL_THREE) {
-                createObstacleLevelThree();
+                figures.clear();
+                obstacles.clear();
+                createObstaclesThree();
+                createEnemyThree();
             }
-            createfigures();
-            createEnemy();
-            createScorpion();
+            createHero();
             return;
         }
+
         for (int i = 0; i < figures.size(); i++) {
-            if (figures.get(i) instanceof Bats) {
-                if (hero.collidesWith(figures.get(i).getCollisionRectangle())|| hero.collidesWith((scorpion.getCollisionRectangle()))) {
+                if (hero.collidesWith(figures.get(i).getCollisionRectangle())) {
                         Life = Life - 1;
                         if (Life <= 0) {
                             state = GameState.GAME_OVER;
                         }
                         if (state == GameState.LEVEL_ONE) {
+                            figures.clear();
+                            obstacles.clear();
                             createObstacles();
+                            createEnemyOne();
                         }
                         if (state == GameState.LEVEL_TWO) {
-                            createObstacles2();
+                            figures.clear();
+                            obstacles.clear();
+                            createObstaclesTwo();
+                            createEnemyTwo();
                         }
                         if (state == GameState.LEVEL_THREE) {
-                            createObstacleLevelThree();
+                            figures.clear();
+                            obstacles.clear();
+                            createObstaclesThree();
+                            createEnemyThree();
                         }
-                        createfigures();
-                        createEnemy();
-                        createScorpion();
-                }
+                        createHero();
+
             }
         }
     }
@@ -390,8 +415,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
             state = GameState.GAME_OVER;
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
-            createObstacles2();
+            createObstaclesTwo();
+            createEnemyTwo();
             state = GameState.LEVEL_TWO;  //Knapp 7 för att kunna testköra Level2
+
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
+            createObstaclesThree();
+            createEnemyThree();
+            createHero();
+            state = GameState.LEVEL_THREE;  //Knapp 8 för att kunna testköra Level2
 
         }
     }
@@ -425,6 +458,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         checkEnemyCollision();
         updatePositions();
 
+        hero.updatePosition();
         for (Figure figure : figures) {
             figure.updatePosition();
         }
@@ -440,10 +474,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(spriteBatch);
         }
-        ladder.draw(spriteBatch);
+        for (InteractiveObject object : interActiveObjects){
+            object.draw(spriteBatch);
+        }
         door.draw(spriteBatch);
 
         //Update all game figures' positions based on their speeds
+        hero.draw(spriteBatch);
         for (Figure figure : figures) {
             figure.draw(spriteBatch);
         }
@@ -487,6 +524,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         updatePositions();
         checkObstacleCollision();
 
+        hero.updatePosition();
+
         for (Figure figure : figures) {
             figure.updatePosition();
         }
@@ -498,18 +537,20 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(currentFrame, 380, 120);
         spriteBatch.draw(currentFrame, 1000, 30);
         font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
+        spriteBatch.draw(cactus,550,20,200,140);
 
 
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(spriteBatch);
         }
-        ladder.draw(spriteBatch);
+        for (InteractiveObject object : interActiveObjects){
+            object.draw(spriteBatch);
+        }
         doorTwo.draw(spriteBatch);
-        scorpion.draw(spriteBatch);
-        scorpion.updatePosition();
-        
 
+        hero.draw(spriteBatch);
         //Update all game figures' positions based on their speeds
+
         for (Figure figure : figures) {
             figure.draw(spriteBatch);
         }
@@ -535,6 +576,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
     }
+
     public void renderLevelThree() {
 
         checkInput();
@@ -551,7 +593,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         updatePositions();
         checkObstacleCollision();
 
-
+        hero.updatePosition();
         for (Figure figure : figures) {
             figure.updatePosition();
         }
@@ -569,11 +611,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         for(Obstacle obstacle: obstacles) {
             obstacle.draw(spriteBatch);
         }
-        ladder.draw(spriteBatch);
-        ladder.draw(spriteBatch);
+        for (InteractiveObject object : interActiveObjects){
+            object.draw(spriteBatch);
+        }
         doorThree.draw(spriteBatch);
 
-
+        hero.draw(spriteBatch);
         for (Figure figure : figures) {
             figure.draw(spriteBatch);
         }

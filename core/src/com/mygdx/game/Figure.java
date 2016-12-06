@@ -28,14 +28,19 @@ public abstract class Figure {
     }
 
     public void stopAtEdge() {
-        if (getX() > Gdx.graphics.getWidth() - getWidth())
+        if (getX() > Gdx.graphics.getWidth() - getWidth()) {
             setX(Gdx.graphics.getWidth() - getWidth());
-        if (getX() < 0)
+        }
+        if (getX() < 0) {
             setX(0);
-        if (getY() > Gdx.graphics.getHeight() - getHeight())
+        }
+        if (getY() > Gdx.graphics.getHeight() - getHeight()) {
             setY(Gdx.graphics.getHeight() - getHeight());
-        if (getY() < 0)
+            setSpeedY(-0.1f);
+        }
+        if (getY() < 0) {
             setY(0);
+        }
     }
 
     public int getWidth() {

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * Created by TRAF on 2016-11-21.
  */
-public class Bats extends Figure {
+public class Bat extends Figure {
 
     Animation flyAnimationLeft, flyAnimationRight;
     float FRAME_DURATION = 0.040f;
@@ -17,13 +17,14 @@ public class Bats extends Figure {
     private int ROWS = 4;
 
 
-    public Bats(String animationSheet, float x, float y, int size) {
+    public Bat(String animationSheet, float x, float y, int size) {
 
         super(x, y, size, size);
 
         EnemyAnimationSheet(animationSheet);
 
         time = 0;
+        setSpeedX(2);
 
 
     }

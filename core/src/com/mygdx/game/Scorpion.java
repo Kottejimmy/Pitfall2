@@ -21,6 +21,7 @@ public class Scorpion extends Figure {
         super(x, y, width, height);
 
         EnemyAnimationSheet(animationSheet);
+        setSpeedX(1.5f);
     }
 
     public void EnemyAnimationSheet(String animationSheet) {
@@ -32,6 +33,7 @@ public class Scorpion extends Figure {
         walkLeft = new Animation(FRAME_DURATION, animationFrames[3]);
         walkRight = new Animation(FRAME_DURATION, animationFrames[2]);
     }
+
     public void updatePosition() {
         //First call the method "updatePositionFromSpeed" in the Figure super class
         super.updatePosition();

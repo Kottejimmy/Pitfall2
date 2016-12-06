@@ -79,14 +79,14 @@ public class Hero extends Figure {
 
     public void goLeft() {
         if (getSpeedY() == 0) {
-            setSpeedX(-3);
+            setSpeedX(-5);
         }
     }
 
     public void goRight() {
 
         if (getSpeedY() == 0) {
-            setSpeedX(3);
+            setSpeedX(5);
         }
 
 
@@ -94,7 +94,7 @@ public class Hero extends Figure {
 
     public void jump() {
         if (getSpeedY() == 0) {
-            setSpeedY(3.5f);
+            setSpeedY(5.5f);
         }
     }
 
