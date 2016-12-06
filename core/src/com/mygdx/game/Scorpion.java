@@ -29,14 +29,15 @@ public class Scorpion extends Figure {
 
         TextureRegion[][] animationFrames = TextureRegion.split(enemyAnimation, enemyAnimation.getWidth() / COLUMNS, enemyAnimation.getHeight() / ROWS);
 
-        walkLeft = new Animation(FRAME_DURATION, animationFrames[2]);
-        walkRight = new Animation(FRAME_DURATION, animationFrames[3]);
+        walkLeft = new Animation(FRAME_DURATION, animationFrames[3]);
+        walkRight = new Animation(FRAME_DURATION, animationFrames[2]);
     }
     public void updatePosition() {
         //First call the method "updatePositionFromSpeed" in the Figure super class
         super.updatePosition();
 
-        bounceAtEdge();
+        stopAtPlatform();
+
 
 
         //Then do what's specific for a ghost: it should bounce at the screen edges!

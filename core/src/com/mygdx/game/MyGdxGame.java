@@ -33,6 +33,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     InteractiveObject doorTwo;
     InteractiveObject doorThree;
     InteractiveObject ladder;
+    Scorpion scorpion;
 
 
 
@@ -223,9 +224,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     }
     public void createScorpion() {
-        Scorpion scorpion;
 
-        scorpion = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 600,440,60,50);
+
+        scorpion = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 600,600,60,50);
+        scorpion.setSpeedX(1);
+        scorpion.setX(800);
+        scorpion.setY(544);
+
 
 
     }
@@ -365,8 +370,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
             state = GameState.GAME_OVER;
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
-            createObstacleLevelThree();
-            state = GameState.LEVEL_THREE;  //Knapp 7 för att kunna testköra Level2
+            createObstacles2();
+            state = GameState.LEVEL_TWO;  //Knapp 7 för att kunna testköra Level2
 
         }
     }
@@ -409,6 +414,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(currentFrame, 980, 440); // Renders the current frame onto the screen using the super awesome SpriteBatch at 50,50.
         spriteBatch.draw(currentFrame, 300, 170);
         font.draw(spriteBatch, "Number of lives:" + Life, 20, 700);
+
 
         //draws all platforms on the map
         for (Obstacle obstacle : obstacles) {
@@ -479,6 +485,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         }
         ladder.draw(spriteBatch);
         doorTwo.draw(spriteBatch);
+        scorpion.draw(spriteBatch);
+        scorpion.updatePosition();
         
 
         //Update all game figures' positions based on their speeds
