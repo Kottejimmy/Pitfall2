@@ -78,23 +78,31 @@ public class Hero extends Figure {
     }
 
     public void goLeft() {
-        if (getSpeedY() == 0) {
+
+        if (getSpeedY() == 0&& (state == HeroState.WALKING || state == HeroState.CLIMBING)) {
             setSpeedX(-5);
+        }
+        else if (state==HeroState.SLIDING){
+            setSpeedX(getSpeedX()-2f);
         }
     }
 
     public void goRight() {
 
-        if (getSpeedY() == 0) {
+        if (getSpeedY() == 0&& (state == HeroState.WALKING || state == HeroState.CLIMBING)) {
             setSpeedX(5);
         }
-
+        else if (state==HeroState.SLIDING){
+            setSpeedX(getSpeedX()+2f);
+        }
 
     }
 
     public void jump() {
+
         if (getSpeedY() == 0) {
-            setSpeedY(5.5f);
+
+            setSpeedY(4.5f);
         }
     }
 
@@ -118,6 +126,9 @@ public class Hero extends Figure {
     public void heroStateClimbing() {
         state = HeroState.CLIMBING;
     }
+    public void heroStateSliding() {
+        state = HeroState.SLIDING;
+    }
 
     public HeroState getState() {
         return state;
@@ -136,10 +147,9 @@ public class Hero extends Figure {
     public enum HeroState {
         WALKING,
         FLYING,
-        CLIMBING;
+        CLIMBING,
+        SLIDING;
 
     }
-
-
 }
 

@@ -140,7 +140,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         coins.add(coin1);
         coins.add(coin2);
         door = new InteractiveObject("Plattform/Door.png", 1185, 420, 120, 90);
-        InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 950, 150, 50, 265);
+        InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 950, 150, 50, 255);
         interActiveObjects.add(ladder);
     }
 
@@ -300,7 +300,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createEnemyTwo();
             createObstaclesTwo();
             state = GameState.LEVEL_TWO;
-
             return;
         }
       if(state == GameState.LEVEL_TWO && hero.collidesWith(doorTwo.getCollisionRectangle())) {
@@ -311,41 +310,58 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             return;
       }
 
-        for (InteractiveObject object : interActiveObjects){
-            if (hero.collidesWith(object.getCollisionRectangle())) {
-             //hero cant "fly past" ladder
-             if (hero.getState() == Hero.HeroState.FLYING) {
-                    hero.stopComplete();
-             }
-             hero.heroStateClimbing();
-                //hero not able to go below ladder
-             if (hero.getY() < object.sprite.getY()) {
-                hero.setY(object.sprite.getY());
-             }
-                return;
+        for (InteractiveObject object : interActiveObjects) {
+            if (!(hero.getState() == Hero.HeroState.SLIDING)) {
+                if (hero.collidesWith(object.getCollisionRectangle())) {
+                    //hero cant "fly past" ladder
+                    if (hero.getState() == Hero.HeroState.FLYING) {
+                        hero.stopComplete();
+                        hero.heroStateClimbing();
+                        return;
+                    }
+                    hero.heroStateClimbing();
+
+                    //hero not able to go below ladder
+                    if (hero.getY() < object.sprite.getY()) {
+                        hero.setY(object.sprite.getY());
+                    }
+                    return;
+                }
             }
         }
 
 
         //loops through all obstacles to see if hero collides with them
         for (Obstacle obstacle : obstacles) {
+
+
             //hero is not able to jump through platform (except if he is climbing a ladder)
             if (hero.collidesWith(obstacle.getCollisionRectangle())) {
+
                 if (hero.getY() < obstacle.sprite.getY() && !(hero.getState() == Hero.HeroState.CLIMBING)) {
                     hero.setSpeedY(-1);
                     return;
                 }
                 //if hero collides with obstacle (from above) put him ontop of obstacle and set Yspeed to 0
-                for (InteractiveObject object : interActiveObjects)
-                if (hero.getSpeedY() < 1 && !(hero.collidesWith(object.getCollisionRectangle()))) {
+
+                if (hero.getSpeedY() < 1 && (hero.collidesWith(obstacle.getCollisionRectangle())) && !(obstacle.hasIce)) {
                     hero.setSpeedY(0);
                     hero.heroStateWalking();
                     hero.setY(obstacle.sprite.getY() + obstacle.sprite.getHeight() - 10);
                     return;
                 }
+
+                if (obstacle.hasIce) {
+
+                    if (hero.getSpeedY() < 1 && hero.collidesWith(obstacle.getCollisionRectangle())) {
+                        hero.setSpeedY(0);
+                        hero.heroStateSliding();
+                        hero.setY(obstacle.sprite.getY() + obstacle.sprite.getHeight() - 10);
+                        return;
+                    }
+                }
             }
         }
-
     //max speedY = -5 for each render speedY becomes faster (increase fallspeed)
                 if (hero.getSpeedY() > -5) {
                     hero.heroStateFlying();
@@ -427,9 +443,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         }
     }
 
-    public void checkInput() {
-
-    }
 
     public void showStartScreen() {
         spriteBatch.begin();
@@ -463,6 +476,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void gameOver() {
+        highscore = new ArrayList<Integer>();
         highscore.add(score);
         Collections.sort(highscore);
         Collections.reverse(highscore);
@@ -564,7 +578,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     public void renderLevelTwo() {
 
-        checkInput();
+
 
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
@@ -634,7 +648,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     public void renderLevelThree() {
 
-        checkInput();
+
 
         Gdx.gl.glClearColor(1,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -682,22 +696,30 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         }
         //makes the hero lose momentum during jump and falling
         if (hero.getState() == Hero.HeroState.FLYING && hero.getSpeedX() < 0) {
-            hero.setSpeedX(hero.getSpeedX() + 0.02f);
+            hero.setSpeedX(hero.getSpeedX() + 0.03f);
         }
         if (hero.getState() == Hero.HeroState.FLYING && hero.getSpeedX() > 0) {
-            hero.setSpeedX(hero.getSpeedX() - 0.02f);
+            hero.setSpeedX(hero.getSpeedX() - 0.03f);
+        }
+        if (hero.getState() == Hero.HeroState.SLIDING && hero.getSpeedX() < 0) {
+            hero.setSpeedX(hero.getSpeedX() - 0.03f);
+        }
+        if (hero.getState() == Hero.HeroState.SLIDING && hero.getSpeedX() > 0) {
+            hero.setSpeedX(hero.getSpeedX() + 0.03f);
         }
         //makes the hero stop when he is on ladders
         if (hero.getState() == Hero.HeroState.CLIMBING && !(Gdx.input.isKeyPressed(Input.Keys.UP)) && !(Gdx.input.isKeyPressed(Input.Keys.DOWN))) {
             hero.stopHeight();
         }
 
-
+        System.out.println(hero.getSpeedY());
+        System.out.println(hero.getState());
 
     }
 
     @Override
     public boolean keyDown(int keycode) {
+
         if (keycode == Input.Keys.SPACE) {
             hero.jump();
         }
@@ -722,10 +744,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             state = GameState.START_SCREEN;
         }
 
-        if (keycode == Input.Keys.RIGHT && hero.getSpeedY() == 0) {
+        if (keycode == Input.Keys.RIGHT && hero.getSpeedY() == 0 &&(hero.getState()==Hero.HeroState.WALKING||hero.getState()== Hero.HeroState.CLIMBING)) {
             hero.stopComplete();
         }
-        if (keycode == Input.Keys.LEFT &&  hero.getSpeedY() == 0) {
+        if (keycode == Input.Keys.LEFT &&  hero.getSpeedY() == 0 && (hero.getState()==Hero.HeroState.WALKING||hero.getState()== Hero.HeroState.CLIMBING)) {
             hero.stopComplete();
         }
         if (keycode == Input.Keys.UP && hero.getState() == Hero.HeroState.CLIMBING ) {
