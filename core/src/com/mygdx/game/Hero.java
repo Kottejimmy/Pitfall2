@@ -102,7 +102,7 @@ public class Hero extends Figure {
 
         if (getSpeedY() == 0) {
 
-            setSpeedY(4.5f);
+            setSpeedY(5.0f);
         }
     }
 

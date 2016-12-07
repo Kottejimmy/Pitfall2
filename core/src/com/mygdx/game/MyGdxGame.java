@@ -39,6 +39,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     BitmapFont highscorefont;
     Texture high_score;
     ArrayList<Coin> coins;
+    ArrayList<Blocks> iceblocks;
+    Blocks iceForm11;
+    Blocks iceForm12;
 
 
 
@@ -194,14 +197,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Obstacle iceForm9 = new Obstacle("Plattform/ice5.png", 550,70,120,60);
         Obstacle iceForm10 = new Obstacle("Plattform/iceform2.png", 1250,510,50,50);
         Obstacle iceForm13 = new Obstacle("Plattform/iceform2.png", 1200,510,50,50);
-        Obstacle iceForm11 = new Obstacle("Plattform/iceform2.png", 900,440,50,50);
-        Obstacle iceForm12 = new Obstacle("Plattform/iceform2.png", 900,370,50,50);
+
 
         InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 100, 90, 50, 250);
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 550, 350, 50, 200);
         InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 270);
 
         doorThree = new InteractiveObject("Plattform/Door.png", 1100, 350, 80, 80);
+        iceForm11 = new Blocks("Plattform/iceform2.png", 900,430,65,65);
+        iceForm12 = new Blocks("Plattform/iceform2.png", 900,356,65,65);
 
 
         obstacles.add(iceForm);
@@ -214,12 +218,11 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(iceForm8);
         obstacles.add(iceForm9);
         obstacles.add(iceForm10);
-        obstacles.add(iceForm11);
-        obstacles.add(iceForm12);
         obstacles.add(iceForm13);
         interActiveObjects.add(ladder1);
         interActiveObjects.add(ladder2);
         interActiveObjects.add(ladder3);
+
 
 
     }
@@ -292,6 +295,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     public void checkObstacleCollision() {
 
+
         //hero collides with door get to level2
         if (hero.collidesWith(door.getCollisionRectangle())) {
             figures.clear();
@@ -309,6 +313,18 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             hero.setY(600);
             return;
       }
+
+
+
+        if(state == GameState.LEVEL_THREE && hero.collidesWith(doorThree.getCollisionRectangle())) {
+            createObstaclesThree();
+            state = GameState.START_SCREEN;
+            hero.setX(10);
+            hero.setY(600);
+            return;
+        }
+
+
 
         for (InteractiveObject object : interActiveObjects) {
             if (!(hero.getState() == Hero.HeroState.SLIDING)) {
@@ -362,6 +378,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 }
             }
         }
+
     //max speedY = -5 for each render speedY becomes faster (increase fallspeed)
                 if (hero.getSpeedY() > -5) {
                     hero.heroStateFlying();
@@ -535,6 +552,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         font.draw(spriteBatch, "Number of lives:" + Life, 20, 700);
 
 
+
+
         //draws all platforms on the map
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(spriteBatch);
@@ -543,6 +562,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             object.draw(spriteBatch);
         }
         door.draw(spriteBatch);
+
 
         for (InteractiveObject coin : coins){
             coin.draw(spriteBatch);
@@ -684,6 +704,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             object.draw(spriteBatch);
         }
         doorThree.draw(spriteBatch);
+        iceForm12.draw(spriteBatch);
+        iceForm11.draw(spriteBatch);
 
         hero.draw(spriteBatch);
         for (Figure figure : figures) {
@@ -714,6 +736,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         System.out.println(hero.getSpeedY());
         System.out.println(hero.getState());
+        if(state == GameState.LEVEL_THREE && hero.collidesWith(iceForm11.getCollisionRectangle()) || hero.collidesWith(iceForm12.getCollisionRectangle()))  {
+            hero.setSpeedX(-hero.getSpeedX()-0);
+            return;
+        }
 
     }
 
