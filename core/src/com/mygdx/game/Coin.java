@@ -4,13 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Coin extends InteractiveObject {
 
-    Animation walkAnimation; // Allows us to create animated figure.
+    float x, y;
+    static Animation walkAnimation; // Allows us to create animated figure.
     Texture walkSheet;          //The Texture which will contain the whole sheet as a single image (texture).
     TextureRegion[] walkFrames; //Declare walkFrames as an array, the array holds each frame of the animation.
-    TextureRegion currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
     float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
 
     private static final int FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
@@ -18,6 +19,8 @@ public class Coin extends InteractiveObject {
 
     public Coin (String textureFilePath, float x, float y, int size){
         super(textureFilePath, x, y, size, size);
+        this.x = x;
+        this.y = y;
         animateCoin();
     }
 
@@ -37,10 +40,11 @@ public class Coin extends InteractiveObject {
             walkAnimation = new Animation(0.080f, walkFrames); //3 This is where the Animation is created. The first parameter tells the animation, how much time is allocated for each frame.
             stateTime = 0f; // Resets the stateTime to 0. It will start accumulating the time each render call.
 
-
         }
 
-
+    }
+    public void drawCoin(SpriteBatch batch){
+        batch.draw(MyGdxGame.currentFrame, x, y);
     }
 
 }

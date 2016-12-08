@@ -143,7 +143,7 @@ public class Hero extends Figure {
                 getHeight());
     }
 
-    //enums for what state the hero are in
+    //enums for what state the hero is in
     public enum HeroState {
         WALKING,
         FLYING,

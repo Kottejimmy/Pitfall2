@@ -29,6 +29,7 @@ public class Obstacle {
         sprite.draw(batch);
     }
 
+
     public Rectangle getCollisionRectangle() {
         return new Rectangle(
                 sprite.getX() + 40,
