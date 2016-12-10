@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.ArrayList;
+import com.badlogic.gdx.audio.Music;
+import  com.badlogic.gdx.audio.*;
 
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
@@ -42,6 +45,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     ArrayList<Blocks> iceblocks;
     Blocks iceForm11;
     Blocks iceForm12;
+    Music start_Screen_Music;
+    Music level_Music;
+
+
 
 
 
@@ -67,13 +74,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         createEnemyOne();
         createScenarios();
         Gdx.input.setInputProcessor(this);
-
+        start_Screen_Music = Gdx.audio.newMusic(Gdx.files.internal("Music/StartScreen.mp3"));
+        level_Music = Gdx.audio.newMusic(Gdx.files.internal("Music/Playing.mp3"));
 
     }
 
     @Override
     public void render() {
 
+        playMusic();
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -454,6 +463,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
     public void showStartScreen() {
+
         spriteBatch.begin();
         spriteBatch.draw(start, 411, 144);
         spriteBatch.end();
@@ -461,6 +471,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             state = GameState.LEVEL_ONE;
             createObstacles();
+            start_Screen_Music.stop();
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             state = GameState.CONTROLS;
         }else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)){
@@ -469,10 +480,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             System.exit(0);
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
             state = GameState.GAME_OVER;
+            start_Screen_Music.stop();
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
             createObstaclesTwo();
             createEnemyTwo();
             state = GameState.LEVEL_TWO;  //Knapp 7 för att kunna testköra Level2
+            start_Screen_Music.stop();
 
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
@@ -480,7 +493,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createEnemyThree();
             createHero();
             state = GameState.LEVEL_THREE;  //Knapp 8 för att kunna testköra Level2
-
+            start_Screen_Music.stop();
         }
     }
 
@@ -536,6 +549,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void renderLevelOne() {
+
+
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
@@ -601,7 +616,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void renderLevelTwo() {
-
 
 
 
@@ -837,6 +851,19 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         LEVEL_NINE,
         LEVEL_TEN;
 
+    }
+
+
+    public void playMusic(){
+
+        if (state == GameState.START_SCREEN){
+            start_Screen_Music.play();
+            level_Music.stop();
+        }
+        else if (state == GameState.LEVEL_ONE ||state == GameState.LEVEL_TWO ||state == GameState.LEVEL_THREE ||state == GameState.LEVEL_FOUR ){
+            level_Music.play();
+            start_Screen_Music.stop();
+        }
     }
 
 }
