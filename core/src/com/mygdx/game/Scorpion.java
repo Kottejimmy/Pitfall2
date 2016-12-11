@@ -38,7 +38,7 @@ public class Scorpion extends Figure {
         //First call the method "updatePositionFromSpeed" in the Figure super class
         super.updatePosition();
 
-        stopAtPlatform();
+        stopAtPlatForm();
 
 
 

@@ -20,8 +20,7 @@ import  com.badlogic.gdx.audio.*;
 
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
-    private static final int FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
-    private static final int FRAME_ROWS = 1;
+
     private static int Life = 3;
     private static int score = 0;
 
@@ -37,12 +36,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     InteractiveObject door;
     InteractiveObject doorTwo;
     InteractiveObject doorThree;
+    InteractiveObject endPoint;
     Texture cactus;
     ArrayList <Integer> highscores = new ArrayList<Integer>();
     BitmapFont highscorefont;
     Texture high_score;
     ArrayList<Coin> coins;
-    ArrayList<Blocks> iceblocks;
     Blocks iceForm11;
     Blocks iceForm12;
     Music start_Screen_Music;
@@ -107,6 +106,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 break;
             case LEVEL_THREE:
                 renderLevelThree();
+                break;
+            case LEVEL_FOUR:
+                renderLevelFour();
                 break;
             case GAME_OVER:
                 gameOver();
@@ -250,6 +252,45 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
     }
+    public void createObstaclesFour(){
+        obstacles = new ArrayList<Obstacle>();
+        interActiveObjects = new ArrayList<InteractiveObject>();
+        backGroundImg = new Texture("Backgrounds/Jungle.jpg");
+
+        Obstacle greenForm1 = new Obstacle("Plattform/GreenPlatfromLeft.png", 0, 300, 175, 60);
+        Obstacle greenform2 = new Obstacle("Plattform/GreenPlatform.png", 300, 300, 200, 60);
+        Obstacle greenForm3 = new Obstacle("Plattform/GreenPlatform.png", 880, 0, 250, 60);
+        Obstacle greenForm4 = new Obstacle("Plattform/GreenPlatform.png", 500, 0, 50, 60);
+        Obstacle greenForm5 = new Obstacle("Plattform/GreenPlatform.png", 1060, 280, 230, 60);
+        Obstacle greenForm6 = new Obstacle("Plattform/GreenPlatform.png", 920, 400, 170, 60);
+        Obstacle greenForm7 = new Obstacle("Plattform/GreenPlatform.png", 210, 500, 150, 60);
+        Obstacle greenForm8 = new Obstacle("Plattform/GreenPlatform.png", 500, 540, 700, 60);
+
+        InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 1080, 40, 50, 270);
+        InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 920, 435, 50, 140);
+
+        endPoint = new InteractiveObject("Plattform/Star.png", 1160, 580, 50, 50);
+
+
+
+        obstacles.add(greenForm1);
+        obstacles.add(greenform2);
+        obstacles.add(greenForm3);
+        obstacles.add(greenForm4);
+        obstacles.add(greenForm5);
+        obstacles.add(greenForm6);
+        obstacles.add(greenForm7);
+        obstacles.add(greenForm8);
+
+
+        interActiveObjects.add(ladder1);
+        interActiveObjects.add(ladder2);
+
+
+
+
+
+    }
 
     public void createHero() {
         hero = new Hero("Hero/Cng-Hiro.png",0,500,80);
@@ -269,7 +310,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
         Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
-        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 800,544,60,50);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 900,544,60,50);
         figures.add(scorpion1);
         figures.add(bat1);
         figures.add(bat2);
@@ -280,11 +321,20 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
         Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
-        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 800,544,60,50);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 1200,544,60,50);
+        Scorpion scorpion2 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 900,100,60,50);
         figures.add(scorpion1);
         figures.add(bat1);
         figures.add(bat2);
+        figures.add(scorpion2);
 
+    }
+    public void createEnemyFour() {
+        figures = new ArrayList<Figure>(figures);
+        Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 900, 575, 60, 50);
+        figures.add(bat1);
+        figures.add(scorpion1);
     }
 
     public void createScenarios(){
@@ -308,6 +358,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             return;
         }
       if(state == GameState.LEVEL_TWO && hero.collidesWith(doorTwo.getCollisionRectangle())) {
+            figures.clear();
+            obstacles.clear();
+            createHero();
+            createEnemyThree();
             createObstaclesThree();
             state = GameState.LEVEL_THREE;
             hero.setX(10);
@@ -317,9 +371,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
 
+
         if(state == GameState.LEVEL_THREE && hero.collidesWith(doorThree.getCollisionRectangle())) {
-            createObstaclesThree();
-            state = GameState.START_SCREEN;
+            figures.clear();
+            obstacles.clear();
+            createHero();
+            createEnemyFour();
+            createObstaclesFour();
+            state = GameState.LEVEL_FOUR;
             hero.setX(10);
             hero.setY(600);
             return;
@@ -411,6 +470,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 createObstaclesThree();
                 createEnemyThree();
             }
+            if (state == GameState.LEVEL_FOUR){
+                figures.clear();
+                obstacles.clear();
+                createObstaclesFour();
+                createEnemyFour();
+            }
             createHero();
             return;
         }
@@ -448,6 +513,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                             obstacles.clear();
                             createObstaclesThree();
                             createEnemyThree();
+                        }
+                        if (state == GameState.LEVEL_FOUR) {
+                            figures.clear();
+                            obstacles.clear();
+                            createObstaclesFour();
+                            createEnemyFour();
                         }
                         createHero();
 
@@ -494,6 +565,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             state = GameState.LEVEL_THREE;  //Knapp 8 för att kunna testköra Level2
             start_Screen_Music.stop();
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_9)) {
+            createObstaclesFour();
+            createEnemyFour();
+            createHero();
+            state = GameState.LEVEL_FOUR;
+            start_Screen_Music.stop();
+
         }
     }
 
@@ -762,6 +841,72 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             hero.setSpeedX(-hero.getSpeedX()-0);
             return;
         }
+
+    }
+    public void renderLevelFour() {
+
+        Gdx.gl.glClearColor(1,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+        currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true);
+
+        checkEnemyCollision();
+        updatePositions();
+        checkObstacleCollision();
+
+        hero.updatePosition();
+        for (Figure figure : figures) {
+            figure.updatePosition();
+        }
+
+
+
+        spriteBatch.begin();
+        spriteBatch.draw(backGroundImg, 0, 20);
+        font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
+
+        for (Coin coin : coins){
+            coin.drawCoin(spriteBatch);
+        }
+
+        for (Obstacle obstacle : obstacles) {
+            obstacle.draw(spriteBatch);
+        }
+        for (InteractiveObject object : interActiveObjects){
+            object.draw(spriteBatch);
+        }
+
+        endPoint.draw(spriteBatch);
+        hero.draw(spriteBatch);
+        //Update all game figures' positions based on their speeds
+
+
+        for (Figure figure : figures) {
+            figure.draw(spriteBatch);
+        }
+
+        spriteBatch.end();
+        //makes the hero stop when he is not walking
+        if (hero.getState() == Hero.HeroState.WALKING && !(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && !(Gdx.input.isKeyPressed(Input.Keys.LEFT))) {
+            hero.setSpeedX(0);
+        }
+        //makes the hero lose momentum during jump and falling
+        if (hero.getState() == Hero.HeroState.FLYING && hero.getSpeedX() < 0) {
+            hero.setSpeedX(hero.getSpeedX() + 0.03f);
+        }
+        if (hero.getState() == Hero.HeroState.FLYING && hero.getSpeedX() > 0) {
+            hero.setSpeedX(hero.getSpeedX() - 0.03f);
+        }
+        //makes the hero stop when he is on ladders
+        if (hero.getState() == Hero.HeroState.CLIMBING && !(Gdx.input.isKeyPressed(Input.Keys.UP)) && !(Gdx.input.isKeyPressed(Input.Keys.DOWN))) {
+            hero.stopHeight();
+        }
+
+
+
+
 
     }
 
