@@ -72,6 +72,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         spriteBatch = new SpriteBatch();
         createObstacles();
+        createCoinOne();
         createHero();
         createEnemyOne();
         createScenarios();
@@ -137,7 +138,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void createObstacles() {
-        coins = new ArrayList<Coin>();
+
         obstacles = new ArrayList<Obstacle>();
         interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/castle.jpg");
@@ -152,10 +153,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(brickplattform2);
         obstacles.add(brickplattform4);
 
-        Coin coin1 = new Coin("Plattform/coiiins.png", 300, 170, 50);
-        Coin coin2 = new Coin("Plattform/coiiins.png", 980, 440, 50);
-        coins.add(coin1);
-        coins.add(coin2);
+
         door = new InteractiveObject("Plattform/Door.png", 1185, 420, 120, 90);
         InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 950, 150, 50, 255);
         interActiveObjects.add(ladder);
@@ -175,14 +173,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Obstacle plattform7 = new Obstacle("Plattform/brickPlattform.png", 850, 179, 150, 25);
         Obstacle plattform8 = new Obstacle("Plattform/brickPlattform.png", 630, 520, 650, 25);
 
-        Coin coin1 = new Coin("Plattform/coiiins.png", 970, 208, 50);
-        Coin coin2 = new Coin("Plattform/coiiins.png", 300, 380, 50);
-        Coin coin3 = new Coin("Plattform/coiiins.png", 380, 120, 50);
-        Coin coin4 = new Coin("Plattform/coiiins.png", 1000, 30, 50);
-        coins.add(coin1);
-        coins.add(coin2);
-        coins.add(coin3);
-        coins.add(coin4);
+
 
 
 
@@ -227,15 +218,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 550, 350, 50, 200);
         InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 250);
 
-        Coin coin1 = new Coin("Plattform/coiiins.png", 70, 360, 50);
-        Coin coin2 = new Coin("Plattform/coiiins.png", 1110, 570, 50);
-        Coin coin3 = new Coin("Plattform/coiiins.png", 580, 130, 50);
-        Coin coin4 = new Coin("Plattform/coiiins.png", 80, 100, 50);
 
-        coins.add(coin1);
-        coins.add(coin2);
-        coins.add(coin3);
-        coins.add(coin4);
 
         doorThree = new InteractiveObject("Plattform/Door.png", 1100, 350, 80, 80);
         iceForm11 = new Blocks("Plattform/iceform2.png", 900,430,65,65);
@@ -348,6 +331,64 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         figures.add(scorpion1);
     }
 
+    public void createCoinOne (){
+        coins = new ArrayList<Coin>();
+
+        Coin coin1 = new Coin("Plattform/coiiins.png", 300, 170, 50);
+        Coin coin2 = new Coin("Plattform/coiiins.png", 980, 440, 50);
+        coins.add(coin1);
+        coins.add(coin2);
+
+
+    }
+    public void createCoinTwo (){
+        coins = new ArrayList<Coin>();
+
+        Coin coin1 = new Coin("Plattform/coiiins.png", 970, 208, 50);
+        Coin coin2 = new Coin("Plattform/coiiins.png", 300, 380, 50);
+        Coin coin3 = new Coin("Plattform/coiiins.png", 380, 120, 50);
+        Coin coin4 = new Coin("Plattform/coiiins.png", 1000, 30, 50);
+        coins.add(coin1);
+        coins.add(coin2);
+        coins.add(coin3);
+        coins.add(coin4);
+
+
+    }
+
+
+    public void createCoinThree (){
+        coins = new ArrayList<Coin>();
+
+        Coin coin1 = new Coin("Plattform/coiiins.png", 70, 360, 50);
+        Coin coin2 = new Coin("Plattform/coiiins.png", 1110, 570, 50);
+        Coin coin3 = new Coin("Plattform/coiiins.png", 580, 130, 50);
+        Coin coin4 = new Coin("Plattform/coiiins.png", 80, 100, 50);
+
+        coins.add(coin1);
+        coins.add(coin2);
+        coins.add(coin3);
+        coins.add(coin4);
+
+
+    }
+
+    public void createCoinFour (){
+        coins = new ArrayList<Coin>();
+
+        Coin coin1 = new Coin("Plattfrom/coiiins,png", 605, 120, 50);
+        Coin coin2 = new Coin("Plattfrom/coiiins,png", 230, 550, 50);
+        Coin coin3 = new Coin("Plattfrom/coiiins,png", 1150, 340, 50);
+        Coin coin4 = new Coin("Plattfrom/coiiins,png", 1020, 580, 50);
+
+
+        coins.add(coin1);
+        coins.add(coin2);
+        coins.add(coin3);
+        coins.add(coin4);
+
+    }
+
     public void createScenarios(){
         start = new Texture("gamescenarios/pitfall2_startscreen.png");
         controls = new Texture("gamescenarios/pitfall2_controls.png");
@@ -362,6 +403,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if (hero.collidesWith(door.getCollisionRectangle())) {
             figures.clear();
             obstacles.clear();
+            coins.clear();
+            createCoinTwo();
             createHero();
             createEnemyTwo();
             createObstaclesTwo();
@@ -371,6 +414,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
       if(state == GameState.LEVEL_TWO && hero.collidesWith(doorTwo.getCollisionRectangle())) {
             figures.clear();
             obstacles.clear();
+            coins.clear();
+            createCoinThree();
             createHero();
             createEnemyThree();
             createObstaclesThree();
@@ -386,6 +431,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if(state == GameState.LEVEL_THREE && hero.collidesWith(doorThree.getCollisionRectangle())) {
             figures.clear();
             obstacles.clear();
+            coins.clear();
+            createCoinFour();
             createHero();
             createEnemyFour();
             createObstaclesFour();
@@ -487,6 +534,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             if (state == GameState.LEVEL_FOUR){
                 figures.clear();
                 obstacles.clear();
+
                 createObstaclesFour();
                 createEnemyFour();
             }
@@ -555,7 +603,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             state = GameState.LEVEL_ONE;
+            timeSeconds = 100;
             createObstacles();
+            createEnemyOne();
+            createCoinOne();
             start_Screen_Music.stop();
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             state = GameState.CONTROLS;
@@ -591,7 +642,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void gameOver() {
-
         highscores.add(score);
         Collections.sort(highscores);
         Collections.reverse(highscores);
