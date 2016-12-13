@@ -48,6 +48,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     Blocks iceForm12;
     Music start_Screen_Music;
     Music level_Music;
+    ArrayList<MovingObstacles> movingObstacles;
+    MovingObstacles water1;
 
 
 
@@ -59,7 +61,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     SpriteBatch spriteBatch;    //The SpriteBatch is used to draw the texture onto the screen.
     static TextureRegion currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
 
-    float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
+    float stateTime;   // The time is the number of seconds elapsed from the start of the animation.
     GameState state = GameState.START_SCREEN;
 
     @Override
@@ -245,6 +247,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void createObstaclesFour(){
+        movingObstacles = new ArrayList<MovingObstacles>();
         obstacles = new ArrayList<Obstacle>();
         interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/Jungle.jpg");
@@ -262,9 +265,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 920, 435, 50, 120);
 
         endPoint = new InteractiveObject("Plattform/Star.png", 1160, 580, 50, 50);
+        water1 =  new MovingObstacles("Plattform/WaterSheet.gif",100,100,200);
 
-
-
+        movingObstacles.add(water1);
         obstacles.add(greenForm1);
         obstacles.add(greenform2);
         obstacles.add(greenForm3);
@@ -374,12 +377,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void createCoinFour (){
+
         coins = new ArrayList<Coin>();
 
-        Coin coin1 = new Coin("Plattfrom/coiiins,png", 605, 120, 50);
-        Coin coin2 = new Coin("Plattfrom/coiiins,png", 230, 550, 50);
-        Coin coin3 = new Coin("Plattfrom/coiiins,png", 1150, 340, 50);
-        Coin coin4 = new Coin("Plattfrom/coiiins,png", 1020, 580, 50);
+        Coin coin1 = new Coin("Plattform/coiiins.png", 766, 50, 50);
+        Coin coin2 = new Coin("Plattform/coiiins.png", 230, 550, 50);
+        Coin coin3 = new Coin("Plattform/coiiins.png", 1150, 340, 50);
+        Coin coin4 = new Coin("Plattform/coiiins.png", 1020, 580, 50);
 
 
         coins.add(coin1);
@@ -620,6 +624,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
             createObstaclesTwo();
             createEnemyTwo();
+            createCoinTwo();
             state = GameState.LEVEL_TWO;  //Knapp 7 för att kunna testköra Level2
             start_Screen_Music.stop();
 
@@ -628,6 +633,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createObstaclesThree();
             createEnemyThree();
             createHero();
+            createCoinThree();
             state = GameState.LEVEL_THREE;  //Knapp 8 för att kunna testköra Level2
             start_Screen_Music.stop();
         }
@@ -635,6 +641,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createObstaclesFour();
             createEnemyFour();
             createHero();
+            createCoinFour();
             state = GameState.LEVEL_FOUR;
             start_Screen_Music.stop();
 
@@ -694,7 +701,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public void renderLevelOne() {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
 
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
 
@@ -762,7 +769,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
 
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
 
@@ -835,7 +842,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true);
 
 
@@ -914,7 +921,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true);
 
         checkEnemyCollision();
@@ -946,7 +953,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         endPoint.draw(spriteBatch);
         hero.draw(spriteBatch);
-        //Update all game figures' positions based on their speeds
+
+        water1.draw(spriteBatch);
+
+        for (MovingObstacles movingObstacle :movingObstacles ){
+            movingObstacle.draw(spriteBatch);
+        }
+
 
 
         for (Figure figure : figures) {

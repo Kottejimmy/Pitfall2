@@ -12,7 +12,7 @@ public class Coin extends InteractiveObject {
     static Animation walkAnimation; // Allows us to create animated figure.
     Texture walkSheet;          //The Texture which will contain the whole sheet as a single image (texture).
     TextureRegion[] walkFrames; //Declare walkFrames as an array, the array holds each frame of the animation.
-    float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
+    float stateTime;   // The time is the number of seconds elapsed from the start of the animation.
 
     private static final int FRAME_COLS = 10; //defines constants representing how many sprites are laid out horizontally and vertically
     private static final int FRAME_ROWS = 1;
@@ -38,7 +38,7 @@ public class Coin extends InteractiveObject {
             }
 
             walkAnimation = new Animation(0.080f, walkFrames); //3 This is where the Animation is created. The first parameter tells the animation, how much time is allocated for each frame.
-            stateTime = 0f; // Resets the stateTime to 0. It will start accumulating the time each render call.
+            stateTime = 0f; // Resets the time to 0. It will start accumulating the time each render call.
 
         }
 
