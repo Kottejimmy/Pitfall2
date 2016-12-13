@@ -128,7 +128,7 @@ public abstract class Figure {
             setSpeedY(-getSpeedY());
     }
     public void stopAtPlatForm() {
-        if ((getX() > Gdx.graphics.getWidth() - 100) || (getX() < 900))
+        if ((getX() > Gdx.graphics.getWidth() - 150) || (getX() < 900))
             setSpeedX(-getSpeedX());
 
 

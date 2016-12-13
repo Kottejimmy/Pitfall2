@@ -23,6 +23,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     private static int Life = 3;
     private static int score = 0;
+    private float timeSeconds = 100;
+    private String displayTime;
 
     BitmapFont font; //Declared to use text.
     Texture start;
@@ -46,6 +48,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     Blocks iceForm12;
     Music start_Screen_Music;
     Music level_Music;
+
 
 
 
@@ -81,6 +84,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     @Override
     public void render() {
 
+        if (timeSeconds >= 0) {
+            timeSeconds -= Gdx.graphics.getRawDeltaTime();
+        }
+        displayTime = String.format("Time: %.0f",timeSeconds );
         playMusic();
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -190,7 +197,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(plattform8);
 
 
-        InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 935, 380, 50, 162);
+        InteractiveObject ladder = new InteractiveObject("Hero/ladder.png", 935, 380, 50, 152);
         doorTwo = new InteractiveObject("Plattform/Door.png", 1200,540,80,80);
         cactus = new Texture("Plattform/CactusSprite.png");
         interActiveObjects.add(ladder);
@@ -218,7 +225,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 100, 90, 50, 250);
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 550, 350, 50, 200);
-        InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 270);
+        InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 250);
 
         Coin coin1 = new Coin("Plattform/coiiins.png", 70, 360, 50);
         Coin coin2 = new Coin("Plattform/coiiins.png", 1110, 570, 50);
@@ -259,17 +266,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/Jungle.jpg");
 
-        Obstacle greenForm1 = new Obstacle("Plattform/GreenPlatfromLeft.png", 0, 300, 175, 60);
-        Obstacle greenform2 = new Obstacle("Plattform/GreenPlatform.png", 300, 300, 200, 60);
-        Obstacle greenForm3 = new Obstacle("Plattform/GreenPlatform.png", 880, 0, 250, 60);
-        Obstacle greenForm4 = new Obstacle("Plattform/GreenPlatform.png", 500, 0, 50, 60);
-        Obstacle greenForm5 = new Obstacle("Plattform/GreenPlatform.png", 1060, 280, 230, 60);
-        Obstacle greenForm6 = new Obstacle("Plattform/GreenPlatform.png", 920, 400, 170, 60);
-        Obstacle greenForm7 = new Obstacle("Plattform/GreenPlatform.png", 210, 500, 150, 60);
-        Obstacle greenForm8 = new Obstacle("Plattform/GreenPlatform.png", 500, 540, 700, 60);
+        Obstacle greenForm1 = new Obstacle("Plattform/GreenPlatfromLeft.png", 0, 300, 175, 40);
+        Obstacle greenform2 = new Obstacle("Plattform/GreenPlatform.png", 300, 300, 200, 40);
+        Obstacle greenForm3 = new Obstacle("Plattform/GreenPlatform.png", 1060, 0, 250, 40);
+        Obstacle greenForm4 = new Obstacle("Plattform/GreenPlatform.png", 750, 0, 70, 40);
+        Obstacle greenForm5 = new Obstacle("Plattform/GreenPlatform.png", 1060, 280, 230, 40);
+        Obstacle greenForm6 = new Obstacle("Plattform/GreenPlatform.png", 920, 400, 170, 40);
+        Obstacle greenForm7 = new Obstacle("Plattform/GreenPlatform.png", 210, 500, 150, 40);
+        Obstacle greenForm8 = new Obstacle("Plattform/GreenPlatform.png", 500, 540, 700, 40);
 
-        InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 1080, 40, 50, 270);
-        InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 920, 435, 50, 140);
+        InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 1200, 30, 50, 270);
+        InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 920, 435, 50, 120);
 
         endPoint = new InteractiveObject("Plattform/Star.png", 1160, 580, 50, 50);
 
@@ -319,12 +326,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         figures.add(bat2);
 
     }
+
     public void createEnemyThree() {
         figures = new ArrayList<Figure>(figures);
 
         Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
         Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
-        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 1200,554,60,50);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 1140,554,60,50);
         Scorpion scorpion2 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 900,100,60,50);
         figures.add(scorpion1);
         figures.add(bat1);
@@ -455,6 +463,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             if (Life <= 0) {
                 figures.clear();
                 obstacles.clear();
+                timeSeconds = 100;
                 state = GameState.GAME_OVER;
             }
             if (state == GameState.LEVEL_ONE) {
@@ -633,9 +642,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void renderLevelOne() {
-
-
-
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
         stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
@@ -654,6 +660,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(backGroundImg, 0, 20);
         font.draw(spriteBatch, "Number of lives:" + Life, 20, 700);
+        font.draw(spriteBatch, displayTime, 20,720);
 
 
 
@@ -727,6 +734,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(backGroundImg, 0, 20);
         font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
         spriteBatch.draw(cactus,550,20,200,140);
+        font.draw(spriteBatch, displayTime, 20,720);
 
         for (Coin coin : coins){
             coin.drawCoin(spriteBatch);
@@ -797,7 +805,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(currentFrame, 1110, 570);
         spriteBatch.draw(currentFrame, 580, 130);
         spriteBatch.draw(currentFrame, 80, 100);*/
-        font.draw(spriteBatch, "Number of lives:" + Life, 0, 720);
+        font.draw(spriteBatch, "Number of lives:" + Life, 0, 700);
+        font.draw(spriteBatch, displayTime, 20,720);
 
         for (Coin coin : coins){
             coin.drawCoin(spriteBatch);
@@ -872,6 +881,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(backGroundImg, 0, 20);
         font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
+        font.draw(spriteBatch, displayTime, 20,720);
 
         for (Coin coin : coins){
             coin.drawCoin(spriteBatch);
@@ -1016,6 +1026,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             start_Screen_Music.stop();
         }
     }
+
 
 }
 
