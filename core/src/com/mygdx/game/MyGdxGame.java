@@ -128,6 +128,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         backGroundImg.dispose();
 
     }
+
     public void createObstacles() {
         coins = new ArrayList<Coin>();
         obstacles = new ArrayList<Obstacle>();
@@ -252,6 +253,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
     }
+
     public void createObstaclesFour(){
         obstacles = new ArrayList<Obstacle>();
         interActiveObjects = new ArrayList<InteractiveObject>();
@@ -295,6 +297,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public void createHero() {
         hero = new Hero("Hero/Cng-Hiro.png",0,500,80);
     }
+
     public void createEnemyOne() {
 
        figures = new ArrayList<Figure>();
@@ -450,6 +453,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if (hero.getY() < 2) {
             Life = Life -1;
             if (Life <= 0) {
+                figures.clear();
+                obstacles.clear();
                 state = GameState.GAME_OVER;
             }
             if (state == GameState.LEVEL_ONE) {
@@ -843,6 +848,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         }
 
     }
+
     public void renderLevelFour() {
 
         Gdx.gl.glClearColor(1,0,0,1);
