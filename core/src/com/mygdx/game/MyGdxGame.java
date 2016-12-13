@@ -324,7 +324,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         Bat bat1 = new Bat("Enemy/bat1.png", 70, 170, 60);
         Bat bat2 = new Bat("Enemy/bat1.png", 600, 440, 60);
-        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 1200,544,60,50);
+        Scorpion scorpion1 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 1200,554,60,50);
         Scorpion scorpion2 = new Scorpion("Enemy/Sprite_enemy_scorpion.png", 900,100,60,50);
         figures.add(scorpion1);
         figures.add(bat1);

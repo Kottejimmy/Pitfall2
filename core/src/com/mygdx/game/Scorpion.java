@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by TRAF on 2016-12-05.
@@ -59,6 +60,14 @@ public class Scorpion extends Figure {
         return null;
 
 
+    }
+    @Override
+    public Rectangle getCollisionRectangle() {
+        return new Rectangle(
+                getX() + getWidth() / 2,
+                getY() + getHeight() / 8,
+                getWidth() - 20,
+                getHeight()-20 );
     }
 
 }
