@@ -386,7 +386,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public void createCoinFour (){
         coins = new ArrayList<Coin>();
 
-        Coin coin1 = new Coin("Plattform/coiiins.png", 605, 120, 50);
+        Coin coin1 = new Coin("Plattform/coiiins.png", 766, 50, 50);
         Coin coin2 = new Coin("Plattform/coiiins.png", 230, 550, 50);
         Coin coin3 = new Coin("Plattform/coiiins.png", 1150, 340, 50);
         Coin coin4 = new Coin("Plattform/coiiins.png", 1020, 580, 50);
@@ -412,7 +412,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
         //hero collides with door get to level2
-        if (hero.collidesWith(door.getCollisionRectangle())) {
+        if (state == GameState.LEVEL_ONE && hero.collidesWith(door.getCollisionRectangle())) {
             figures.clear();
             obstacles.clear();
             coins.clear();
@@ -420,7 +420,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             createEnemyTwo();
             createObstaclesTwo();
-            score += Math.round(timeSeconds * 100);
+            score += Math.round( (100 - timeSeconds) * 100);
             state = GameState.LEVEL_COMPLETE;
             return;
         }
@@ -432,7 +432,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             createEnemyThree();
             createObstaclesThree();
-            score += Math.round(timeSeconds * 100);
+            score += Math.round((100 - timeSeconds) * 100);
             state = GameState.LEVEL_COMPLETE;
             hero.setX(10);
             hero.setY(600);
@@ -450,10 +450,19 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             createEnemyFour();
             createObstaclesFour();
-            score += Math.round(timeSeconds * 100);
-            state = GameState.GAME_COMPLETE;
+            score += Math.round((100 - timeSeconds) * 100);
+            state = GameState.LEVEL_COMPLETE;
             hero.setX(10);
             hero.setY(600);
+            return;
+        }
+        if (state == GameState.LEVEL_FOUR && hero.collidesWith(endPoint.getCollisionRectangle())) {
+            figures.clear();
+            obstacles.clear();
+            coins.clear();
+            score += Math.round((100 - timeSeconds) * 100);
+            state = GameState.GAME_COMPLETE;
+
             return;
         }
 
@@ -649,6 +658,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createObstaclesFour();
             createEnemyFour();
             createHero();
+            createCoinFour();
             state = GameState.LEVEL_FOUR;
             start_Screen_Music.stop();
 
@@ -705,6 +715,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(game_complete, 411, 144);
         spriteBatch.end();
+        highscores.add(score);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             state = GameState.START_SCREEN;
