@@ -7,10 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class InteractiveObject extends Obstacle {
 
-    public InteractiveObject(float x_position,float y_position, int width, int height){
-        super(x_position,y_position,width,height);
-    }
-
     public InteractiveObject(String textureFilepath, float x_position, float y_position, int width, int height) {
         super(textureFilepath, x_position, y_position, width, height);
     }

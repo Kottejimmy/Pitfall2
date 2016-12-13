@@ -25,11 +25,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     private static int score = 0;
     private float timeSeconds = 100;
     private String displayTime;
+    private static int currentlevel = 1;
+    private int scoredisplay;
 
     BitmapFont font; //Declared to use text.
     Texture start;
     Texture controls;
     Texture gameover;
+    Texture game_complete;
+    Texture level_complete;
     Texture backGroundImg;
     Texture backGroundLevelThree;
     ArrayList<Obstacle> obstacles;
@@ -48,8 +52,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     Blocks iceForm12;
     Music start_Screen_Music;
     Music level_Music;
-    ArrayList<MovingObstacles> movingObstacles;
-    MovingObstacles water1;
 
 
 
@@ -61,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     SpriteBatch spriteBatch;    //The SpriteBatch is used to draw the texture onto the screen.
     static TextureRegion currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
 
-    float stateTime;   // The time is the number of seconds elapsed from the start of the animation.
+    float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
     GameState state = GameState.START_SCREEN;
 
     @Override
@@ -125,6 +127,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 break;
             case HIGH_SCORE:
                 showHighScore();
+                break;
+            case LEVEL_COMPLETE:
+                levelComplete();
+                break;
+            case GAME_COMPLETE:
+                gameComplete();
                 break;
         }
 
@@ -247,7 +255,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void createObstaclesFour(){
-        movingObstacles = new ArrayList<MovingObstacles>();
         obstacles = new ArrayList<Obstacle>();
         interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/Jungle.jpg");
@@ -265,9 +272,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 920, 435, 50, 120);
 
         endPoint = new InteractiveObject("Plattform/Star.png", 1160, 580, 50, 50);
-        water1 =  new MovingObstacles("Plattform/WaterSheet.gif",100,100,200);
 
-        movingObstacles.add(water1);
+
+
         obstacles.add(greenForm1);
         obstacles.add(greenform2);
         obstacles.add(greenForm3);
@@ -377,10 +384,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
     public void createCoinFour (){
-
         coins = new ArrayList<Coin>();
 
-        Coin coin1 = new Coin("Plattform/coiiins.png", 766, 50, 50);
+        Coin coin1 = new Coin("Plattform/coiiins.png", 605, 120, 50);
         Coin coin2 = new Coin("Plattform/coiiins.png", 230, 550, 50);
         Coin coin3 = new Coin("Plattform/coiiins.png", 1150, 340, 50);
         Coin coin4 = new Coin("Plattform/coiiins.png", 1020, 580, 50);
@@ -398,6 +404,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         controls = new Texture("gamescenarios/pitfall2_controls.png");
         gameover = new Texture("gamescenarios/Game_Over_Screen.png");
         high_score = new Texture("gamescenarios/high_score.png");
+        level_complete = new Texture("gamescenarios/level_complete.png");
+        game_complete = new Texture("gamescenarios/game_complete.png");
     }
 
     public void checkObstacleCollision() {
@@ -412,7 +420,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             createEnemyTwo();
             createObstaclesTwo();
-            state = GameState.LEVEL_TWO;
+            score += Math.round(timeSeconds * 100);
+            state = GameState.LEVEL_COMPLETE;
             return;
         }
       if(state == GameState.LEVEL_TWO && hero.collidesWith(doorTwo.getCollisionRectangle())) {
@@ -423,7 +432,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             createEnemyThree();
             createObstaclesThree();
-            state = GameState.LEVEL_THREE;
+            score += Math.round(timeSeconds * 100);
+            state = GameState.LEVEL_COMPLETE;
             hero.setX(10);
             hero.setY(600);
             return;
@@ -432,7 +442,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
 
-        if(state == GameState.LEVEL_THREE && hero.collidesWith(doorThree.getCollisionRectangle())) {
+        if (state == GameState.LEVEL_THREE && hero.collidesWith(doorThree.getCollisionRectangle())) {
             figures.clear();
             obstacles.clear();
             coins.clear();
@@ -440,7 +450,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createHero();
             createEnemyFour();
             createObstaclesFour();
-            state = GameState.LEVEL_FOUR;
+            score += Math.round(timeSeconds * 100);
+            state = GameState.GAME_COMPLETE;
             hero.setX(10);
             hero.setY(600);
             return;
@@ -514,7 +525,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             if (Life <= 0) {
                 figures.clear();
                 obstacles.clear();
-                timeSeconds = 100;
                 state = GameState.GAME_OVER;
             }
             if (state == GameState.LEVEL_ONE) {
@@ -624,7 +634,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
             createObstaclesTwo();
             createEnemyTwo();
-            createCoinTwo();
             state = GameState.LEVEL_TWO;  //Knapp 7 för att kunna testköra Level2
             start_Screen_Music.stop();
 
@@ -633,7 +642,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createObstaclesThree();
             createEnemyThree();
             createHero();
-            createCoinThree();
             state = GameState.LEVEL_THREE;  //Knapp 8 för att kunna testköra Level2
             start_Screen_Music.stop();
         }
@@ -641,26 +649,66 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             createObstaclesFour();
             createEnemyFour();
             createHero();
-            createCoinFour();
             state = GameState.LEVEL_FOUR;
             start_Screen_Music.stop();
 
+        } else if (Gdx.input.isKeyPressed(Input.Keys.F1)){
+            gameOver();
         }
     }
 
     public void gameOver() {
+
+        //scoredisplay = score;
+        spriteBatch.begin();
+        spriteBatch.draw(gameover, 480, 210);
+        //highscorefont.draw(spriteBatch, "Your score:  " + scoredisplay, 645, 360);
         highscores.add(score);
         Collections.sort(highscores);
         Collections.reverse(highscores);
         score = 0;
         Life = 3;
-        spriteBatch.begin();
-        spriteBatch.draw(gameover, 480, 210);
+        currentlevel = 1;
+        timeSeconds = 100;
+
         spriteBatch.end();
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             state = GameState.START_SCREEN;
         }
 
+    }
+
+    public void levelComplete(){
+
+        spriteBatch.begin();
+        spriteBatch.draw(level_complete, 411, 144);
+        spriteBatch.end();
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            if (currentlevel == 1){
+                currentlevel++;
+                timeSeconds = 100;
+                state = GameState.LEVEL_TWO;
+            } else if (currentlevel == 2){
+                currentlevel++;
+                timeSeconds = 100;
+                state = GameState.LEVEL_THREE;
+            } else if (currentlevel == 3){
+                currentlevel++;
+                timeSeconds = 100;
+                state = GameState.LEVEL_FOUR;
+            }
+        }
+    }
+
+    public void gameComplete(){
+        spriteBatch.begin();
+        spriteBatch.draw(game_complete, 411, 144);
+        spriteBatch.end();
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            state = GameState.START_SCREEN;
+        }
     }
 
     public void showHighScore(){
@@ -701,7 +749,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public void renderLevelOne() {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
 
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
 
@@ -769,7 +817,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
 
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
 
@@ -842,7 +890,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true);
 
 
@@ -858,10 +906,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(backGroundLevelThree,-400,0);
 
-        /*spriteBatch.draw(currentFrame, 70, 360);
-        spriteBatch.draw(currentFrame, 1110, 570);
-        spriteBatch.draw(currentFrame, 580, 130);
-        spriteBatch.draw(currentFrame, 80, 100);*/
         font.draw(spriteBatch, "Number of lives:" + Life, 0, 700);
         font.draw(spriteBatch, displayTime, 20,720);
 
@@ -906,8 +950,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
             hero.stopHeight();
         }
 
-        System.out.println(hero.getSpeedY());
-        System.out.println(hero.getState());
+
         if(state == GameState.LEVEL_THREE && hero.collidesWith(iceForm11.getCollisionRectangle()) || hero.collidesWith(iceForm12.getCollisionRectangle()))  {
             hero.setSpeedX(-hero.getSpeedX()-0);
             return;
@@ -921,7 +964,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
-        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the time.
+        stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true);
 
         checkEnemyCollision();
@@ -953,13 +996,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         endPoint.draw(spriteBatch);
         hero.draw(spriteBatch);
-
-        water1.draw(spriteBatch);
-
-        for (MovingObstacles movingObstacle :movingObstacles ){
-            movingObstacle.draw(spriteBatch);
-        }
-
+        //Update all game figures' positions based on their speeds
 
 
         for (Figure figure : figures) {
@@ -992,7 +1029,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
 
-        if (keycode == Input.Keys.SPACE && state != GameState.START_SCREEN) {
+        if (keycode == Input.Keys.SPACE && state != GameState.START_SCREEN && state != GameState.LEVEL_COMPLETE) {
             hero.jump();
         }
         if (keycode == Input.Keys.RIGHT) {
@@ -1064,6 +1101,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         CONTROLS,
         GAME_OVER,
         HIGH_SCORE,
+        LEVEL_COMPLETE,
+        GAME_COMPLETE,
         LEVEL_ONE,
         LEVEL_TWO,
         LEVEL_THREE,
