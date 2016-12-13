@@ -10,20 +10,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * Created by Kottejimmy on 2016-12-13.
  */
-public class MovingObstacles extends Obstacle {
+public class MovingObstacles extends InteractiveObject {
+    float x, y;
     static Animation walkAnimation; // Allows us to create animated figure.
     Texture walkSheet;          //The Texture which will contain the whole sheet as a single image (texture).
     TextureRegion[] walkFrames; //Declare walkFrames as an array, the array holds each frame of the animation.
     float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
-    private float y;
-    private float x;
     private static final int FRAME_COLS = 1; //defines constants representing how many sprites are laid out horizontally and vertically
     private static final int FRAME_ROWS = 4;
 
-    public MovingObstacles(String textureFilepath, float x_position, float y_position, int width, int height) {
-        super(textureFilepath, x_position, y_position, width, height);
-        x = x_position;
-        y = y_position;
+    public MovingObstacles (String textureFilePath, float x, float y, int size){
+        super(textureFilePath, x, y, size, size);
+        this.x = x;
+        this.y = y;
         animateObstacle();
     }
 
@@ -47,8 +46,8 @@ public class MovingObstacles extends Obstacle {
 
     }
 
-    @Override
-    public void draw(SpriteBatch batch) {
+
+    public void drawObstacle(SpriteBatch batch){
         batch.draw(MyGdxGame.currentFrame, x, y);
     }
 }

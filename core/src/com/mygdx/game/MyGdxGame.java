@@ -52,6 +52,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     Blocks iceForm12;
     Music start_Screen_Music;
     Music level_Music;
+    MovingObstacles water;
 
 
 
@@ -62,7 +63,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     SpriteBatch spriteBatch;    //The SpriteBatch is used to draw the texture onto the screen.
     static TextureRegion currentFrame; //This variable will hold the current frame and this is the region which is drawn on each render call.
-
+    static TextureRegion currentframtwo;
     float stateTime;   // The stateTime is the number of seconds elapsed from the start of the animation.
     GameState state = GameState.START_SCREEN;
 
@@ -259,6 +260,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         interActiveObjects = new ArrayList<InteractiveObject>();
         backGroundImg = new Texture("Backgrounds/Jungle.jpg");
 
+
         Obstacle greenForm1 = new Obstacle("Plattform/GreenPlatfromLeft.png", 0, 300, 175, 40);
         Obstacle greenform2 = new Obstacle("Plattform/GreenPlatform.png", 300, 300, 200, 40);
         Obstacle greenForm3 = new Obstacle("Plattform/GreenPlatform.png", 1060, 0, 250, 40);
@@ -270,6 +272,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 1200, 30, 50, 270);
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 920, 435, 50, 120);
+        water  = new MovingObstacles("Plattform/Watersheet.gif", 45,580,10000);
+
 
         endPoint = new InteractiveObject("Plattform/Star.png", 1160, 580, 50, 50);
 
@@ -283,6 +287,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         obstacles.add(greenForm6);
         obstacles.add(greenForm7);
         obstacles.add(greenForm8);
+
+
 
 
         interActiveObjects.add(ladder1);
@@ -390,6 +396,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Coin coin2 = new Coin("Plattform/coiiins.png", 230, 550, 50);
         Coin coin3 = new Coin("Plattform/coiiins.png", 1150, 340, 50);
         Coin coin4 = new Coin("Plattform/coiiins.png", 1020, 580, 50);
+
 
 
         coins.add(coin1);
@@ -697,15 +704,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             if (currentlevel == 1){
                 currentlevel++;
-                timeSeconds = 100;
                 state = GameState.LEVEL_TWO;
             } else if (currentlevel == 2){
                 currentlevel++;
-                timeSeconds = 100;
                 state = GameState.LEVEL_THREE;
             } else if (currentlevel == 3){
                 currentlevel++;
-                timeSeconds = 100;
                 state = GameState.LEVEL_FOUR;
             }
         }
@@ -764,6 +768,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true); //Obtains the current frame
 
+
         checkObstacleCollision();
         checkEnemyCollision();
         updatePositions();
@@ -793,6 +798,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         for (Coin coin : coins){
             coin.drawCoin(spriteBatch);
         }
+
 
         //Update all game figures' positions based on their speeds
         hero.draw(spriteBatch);
@@ -977,6 +983,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
         currentFrame = Coin.walkAnimation.getKeyFrame(stateTime, true);
+        currentframtwo = MovingObstacles.walkAnimation.getKeyFrame(stateTime, true);
+
+
 
         checkEnemyCollision();
         updatePositions();
@@ -991,12 +1000,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         spriteBatch.begin();
         spriteBatch.draw(backGroundImg, 0, 20);
+        spriteBatch.draw(currentframtwo,300,-60);
+        spriteBatch.draw(currentframtwo,0,-60);
         font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
         font.draw(spriteBatch, displayTime, 20,720);
 
+
         for (Coin coin : coins){
             coin.drawCoin(spriteBatch);
+
         }
+
 
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(spriteBatch);
