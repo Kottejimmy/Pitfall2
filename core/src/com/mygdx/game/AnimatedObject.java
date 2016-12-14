@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * Created by Kottejimmy on 2016-12-13.
  */
-public class MovingObstacles extends InteractiveObject {
+public class AnimatedObject extends InteractiveObject {
     float x, y;
     static Animation walkAnimation; // Allows us to create animated figure.
     Texture walkSheet;          //The Texture which will contain the whole sheet as a single image (texture).
@@ -19,15 +19,15 @@ public class MovingObstacles extends InteractiveObject {
     private static final int FRAME_COLS = 1; //defines constants representing how many sprites are laid out horizontally and vertically
     private static final int FRAME_ROWS = 4;
 
-    public MovingObstacles (String textureFilePath, float x, float y, int size){
+    public AnimatedObject(String textureFilePath, float x, float y, int size){
         super(textureFilePath, x, y, size, size);
         this.x = x;
         this.y = y;
-        animateObstacle();
+        animateObject();
     }
 
 
-    public void animateObstacle() {
+    private void animateObject() {
 
         walkSheet = new Texture(Gdx.files.internal("Plattform/Watersheet.gif"));
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);              // #10
@@ -45,6 +45,7 @@ public class MovingObstacles extends InteractiveObject {
         }
 
     }
+    
 
 
     public void drawObstacle(SpriteBatch batch){
