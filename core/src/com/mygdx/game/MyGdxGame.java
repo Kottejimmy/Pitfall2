@@ -87,9 +87,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     @Override
     public void render() {
 
-        if (timeSeconds >= 0) {
-            timeSeconds -= Gdx.graphics.getRawDeltaTime();
-        }
         displayTime = String.format("Time: %.0f",timeSeconds );
         playMusic();
 
@@ -109,15 +106,19 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 showControls();
                 break;
             case LEVEL_ONE:
+                countTime();
                 renderLevelOne();
                 break;
             case LEVEL_TWO:
+                countTime();
                 renderLevelTwo();
                 break;
             case LEVEL_THREE:
+                countTime();
                 renderLevelThree();
                 break;
             case LEVEL_FOUR:
+                countTime();
                 renderLevelFour();
                 break;
             case GAME_OVER:
@@ -224,7 +225,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         InteractiveObject ladder1 = new InteractiveObject("Hero/ladder.png", 100, 90, 50, 250);
         InteractiveObject ladder2 = new InteractiveObject("Hero/ladder.png", 550, 350, 50, 200);
-        InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 250);
+        InteractiveObject ladder3 = new InteractiveObject("Hero/ladder.png", 1000, 90, 50, 240);
 
 
 
@@ -590,6 +591,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 if (hero.collidesWith(figures.get(i).getCollisionRectangle())) {
                         Life = Life - 1;
                         if (Life <= 0) {
+                            createHero();
+                            highscores.add(score);
                             state = GameState.GAME_OVER;
                         }
                         if (state == GameState.LEVEL_ONE) {
@@ -831,9 +834,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         if (hero.getState() == Hero.HeroState.CLIMBING && !(Gdx.input.isKeyPressed(Input.Keys.UP)) && !(Gdx.input.isKeyPressed(Input.Keys.DOWN))) {
             hero.stopHeight();
         }
-        if (!(hero.getSpeedY()==0)) {
-            System.out.println(hero.getSpeedY());
-        }
+
 
     }
 
@@ -841,7 +842,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
 
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); //Clears the screen each frame.
         stateTime += Gdx.graphics.getDeltaTime(); // Adds the time elapsed since the last render to the stateTime.
 
@@ -977,7 +978,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
         if(state == GameState.LEVEL_THREE && hero.collidesWith(iceForm11.getCollisionRectangle()) || hero.collidesWith(iceForm12.getCollisionRectangle()))  {
-            hero.setSpeedX(-hero.getSpeedX()-0);
+            hero.setSpeedX(0);
+            hero.setX(iceForm11.sprite.getX()+(iceForm11.sprite.getWidth()-10));
             return;
         }
 
@@ -1062,7 +1064,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
 
-        if (keycode == Input.Keys.SPACE && state != GameState.START_SCREEN && state != GameState.LEVEL_COMPLETE) {
+        if (keycode == Input.Keys.SPACE && state != GameState.START_SCREEN && state != GameState.LEVEL_COMPLETE && state != GameState.GAME_OVER) {
             hero.jump();
         }
         if (keycode == Input.Keys.RIGHT) {
@@ -1161,6 +1163,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         }
     }
 
+    public void countTime(){
+
+        if (timeSeconds >= 0) {
+            timeSeconds -= Gdx.graphics.getRawDeltaTime();
+        }
+}
 
 }
 
