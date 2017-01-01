@@ -687,6 +687,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.F1)){
             gameOver();
         }
+        else if (Gdx.input.isKeyPressed(Input.Keys.F2)){
+            figures.clear();
+            createObstaclesThree();
+            createCoinThree();
+            state = GameState.LEVEL_THREE;
+        }
     }
 
     public void gameOver() {
