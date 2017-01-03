@@ -639,6 +639,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             state = GameState.LEVEL_ONE;
+            hero.setX(10);
+            hero.setY(600);
+            score = 0;
+            Life = 3;
             timeSeconds = 100;
             createObstacles();
             createEnemyOne();
@@ -799,6 +803,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(backGroundImg, 0, 20);
         font.draw(spriteBatch, "Number of lives:" + Life, 20, 700);
+        font.draw(spriteBatch, "Score:" + score, 20, 680);
         font.draw(spriteBatch, displayTime, 20,720);
 
 
@@ -871,6 +876,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.begin();
         spriteBatch.draw(backGroundImg, 0, 20);
         font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
+        font.draw(spriteBatch, "Score:" + score, 20, 680);
         spriteBatch.draw(cactus,550,20,200,140);
         font.draw(spriteBatch, displayTime, 20,720);
 
@@ -939,6 +945,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(backGroundLevelThree,-400,0);
 
         font.draw(spriteBatch, "Number of lives:" + Life, 0, 700);
+        font.draw(spriteBatch, "Score:" + score, 20, 680);
         font.draw(spriteBatch, displayTime, 20,720);
 
         for (Coin coin : coins){
@@ -1019,6 +1026,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spriteBatch.draw(currentframtwo,300,-60);
         spriteBatch.draw(currentframtwo,0,-60);
         font.draw(spriteBatch, "Number of lives:"+ Life, 20, 700);
+        font.draw(spriteBatch, "Score:" + score, 20, 680);
         font.draw(spriteBatch, displayTime, 20,720);
 
 
